@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>Dashboard — Panel Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/admin.css"/>
+    <link rel="stylesheet" href="styles/admin-shell.css"/>
+    <script src="js/database.js" defer></script>
+    <script src="js/admin-nav.js" defer></script>
+    <script src="js/dashboard.js" defer></script>
+</head>
+<body class="admin-shell-body">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <a href="index.html" class="admin-back-btn"><span class="material-symbols-outlined">home</span><span>Forum</span></a>
+        <div class="admin-header-divider"></div>
+        <div class="admin-header-brand">
+            <img src="assets/ut-logo.png" alt="UT" style="height:32px;"/>
+            <div><div class="admin-header-title">Panel Super Admin</div><div class="admin-header-sub">Forum Mahasiswa UT</div></div>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <span class="material-symbols-outlined" style="color:var(--color-secondary-container);font-variation-settings:'FILL' 1;">admin_panel_settings</span>
+        <span id="admin-name" class="admin-header-name">Super Admin</span>
+        <button class="admin-logout-btn" id="admin-logout-btn"><span class="material-symbols-outlined">logout</span>Keluar</button>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-nav-section">Utama</div>
+        <a href="dashboard.html" class="admin-nav-link active"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <div class="admin-nav-section">Pengelolaan</div>
+        <a href="admin.html" class="admin-nav-link"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</a>
+        <a href="moderation.html" class="admin-nav-link"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+        <a href="categories.html" class="admin-nav-link"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+        <div class="admin-nav-section">Laporan</div>
+        <a href="stats.html" class="admin-nav-link"><span class="material-symbols-outlined">bar_chart</span>Statistik</a>
+        <a href="activity-log.html" class="admin-nav-link"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+        <div class="admin-nav-divider"></div>
+        <a href="index.html" class="admin-nav-link nav-back"><span class="material-symbols-outlined">arrow_back</span>Kembali ke Forum</a>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div class="admin-page-title"><span class="material-symbols-outlined">dashboard</span>Dashboard</div>
+            <div class="admin-page-subtitle">Ringkasan aktivitas forum secara real-time</div>
+        </div>
+
+        <!-- KPI Row 1 -->
+        <div class="g4" style="margin-bottom:16px;" id="kpi-row-1">
+            <div class="kpi-card" style="--kpi-accent:#002045;">
+                <div class="kpi-icon" style="background:#dbeafe;"><span class="material-symbols-outlined" style="color:#002045;">groups</span></div>
+                <div><div class="kpi-number" id="kpi-total-users">—</div><div class="kpi-label">Total User</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#059669;">
+                <div class="kpi-icon" style="background:#d1fae5;"><span class="material-symbols-outlined" style="color:#059669;">person_check</span></div>
+                <div><div class="kpi-number" id="kpi-active-today">—</div><div class="kpi-label">Aktif Hari Ini</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#7c3aed;">
+                <div class="kpi-icon" style="background:#ede9fe;"><span class="material-symbols-outlined" style="color:#7c3aed;">forum</span></div>
+                <div><div class="kpi-number" id="kpi-threads">—</div><div class="kpi-label">Thread</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#0891b2;">
+                <div class="kpi-icon" style="background:#e0f2fe;"><span class="material-symbols-outlined" style="color:#0891b2;">chat_bubble</span></div>
+                <div><div class="kpi-number" id="kpi-comments">—</div><div class="kpi-label">Komentar</div></div>
+            </div>
+        </div>
+        <!-- KPI Row 2 -->
+        <div class="g4" style="margin-bottom:28px;">
+            <div class="kpi-card" style="--kpi-accent:#dc2626;">
+                <div class="kpi-icon" style="background:#fee2e2;"><span class="material-symbols-outlined" style="color:#dc2626;">flag</span></div>
+                <div><div class="kpi-number" id="kpi-reports">—</div><div class="kpi-label">Laporan Masuk</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#f59e0b;">
+                <div class="kpi-icon" style="background:#fef3c7;"><span class="material-symbols-outlined" style="color:#f59e0b;">pending_actions</span></div>
+                <div><div class="kpi-number" id="kpi-pending-mod">—</div><div class="kpi-label">Menunggu Moderasi</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#d97706;">
+                <div class="kpi-icon" style="background:#ffedd5;"><span class="material-symbols-outlined" style="color:#d97706;">block</span></div>
+                <div><div class="kpi-number" id="kpi-suspended">—</div><div class="kpi-label">Akun Ditangguhkan</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#6b7280;">
+                <div class="kpi-icon" style="background:#f3f4f6;"><span class="material-symbols-outlined" style="color:#6b7280;">warning</span></div>
+                <div><div class="kpi-number" id="kpi-warnings">—</div><div class="kpi-label">Peringatan</div></div>
+            </div>
+        </div>
+
+        <!-- 3-col: Reports | Threads | Activity -->
+        <div class="g3" style="align-items:start;">
+            <!-- Laporan Terbaru -->
+            <div class="admin-card">
+                <div class="sec-header">
+                    <div class="sec-title"><span class="material-symbols-outlined" style="color:#dc2626;">flag</span>Laporan Terbaru</div>
+                    <a href="moderation.html" class="pill pill-red" style="text-decoration:none;cursor:pointer;">Lihat Semua</a>
+                </div>
+                <div id="dash-reports"></div>
+            </div>
+            <!-- Thread Terbaru -->
+            <div class="admin-card">
+                <div class="sec-header">
+                    <div class="sec-title"><span class="material-symbols-outlined" style="color:#7c3aed;">forum</span>Thread Terbaru</div>
+                    <a href="moderation.html" class="pill pill-purple" style="text-decoration:none;">Lihat Semua</a>
+                </div>
+                <div id="dash-threads"></div>
+            </div>
+            <!-- Log Aktivitas Terbaru -->
+            <div class="admin-card">
+                <div class="sec-header">
+                    <div class="sec-title"><span class="material-symbols-outlined" style="color:#0891b2;">history</span>Aktivitas Terbaru</div>
+                    <a href="activity-log.html" class="pill pill-teal" style="text-decoration:none;">Lihat Semua</a>
+                </div>
+                <div id="dash-activity"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

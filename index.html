@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Forum Mahasiswa UT - Beranda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Scripts for Logic & Database -->
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+</head>
+
+<body>
+    <!-- TopNavBar -->
+    <header class="app-header">
+        <div class="header-container">
+            <!-- Left: Menu Icon & Logo -->
+            <div class="header-left">
+                <button class="hamburger-menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a class="brand-logo" href="index.html"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/ut-logo.png" alt="Logo Universitas Terbuka" style="height: 36px; width: auto;" />
+                    <span class="logo-title-3lines">
+                        <span>FORUM</span>
+                        <span>MAHASISWA</span>
+                        <span>Universitas Terbuka</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Center: Search Input -->
+            <div class="header-search">
+                <input class="search-input" placeholder="Cari di sini" type="text" />
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="header-actions">
+                <a href="create.html" class="btn-buat-post">
+                    <span class="material-symbols-outlined">edit</span>
+                    Buat Utas
+                </a>
+                <div class="profile-dropdown-wrapper">
+                    <div class="avatar-container" id="avatar-btn">
+                        <img alt="User Profile Avatar" id="dropdown-avatar-img"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-" />
+                    </div>
+                    <!-- Profile Dropdown Menu -->
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <span class="dropdown-user-name" id="dropdown-user-name">Nama Mahasiswa</span>
+                            <span class="dropdown-user-nim" id="dropdown-user-nim">NIM: 041234567</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="dropdown-profile-btn">
+                            <span class="material-symbols-outlined">person</span>
+                            Profil Saya
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="alert('Fitur Pengaturan Akun akan segera hadir!')">
+                            <span class="material-symbols-outlined">settings</span>
+                            Pengaturan Akun
+                        </a>
+                        <button class="dropdown-item text-error" id="btn-dropdown-logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-row-layout">
+        <!-- SideNavBar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">S</div>
+                <div class="logo-info">
+                    <h2>Forum Mahasiswa</h2>
+                    <p>Modern Scholar</p>
+                </div>
+            </div>
+
+            <!-- User Rank Widget -->
+            <div class="rank-widget">
+                <p class="rank-widget-label">Status Kamu</p>
+                <div class="rank-widget-value">
+                    <span class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    <span>Mahasiswa Berprestasi</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 75%"></div>
+                </div>
+                <p class="rank-widget-footer">150 / 200 rep</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="sidebar-link active" href="#" id="sidebar-home-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Beranda
+                </a>
+                <a class="sidebar-link" href="#" id="sidebar-hot-link">
+                    <span class="material-symbols-outlined text-error">local_fire_department</span>
+                    Hot Threads
+                </a>
+                <a class="sidebar-link" href="#">
+                    <span class="material-symbols-outlined">category</span>
+                    Kategori
+                </a>
+                <a class="sidebar-link" href="#" id="sidebar-saved-link">
+                    <span class="material-symbols-outlined">bookmark</span>
+                    Disimpan
+                </a>
+                <a class="sidebar-link" href="#">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Peringkat
+                </a>
+                <!-- Admin Panel Section: hanya tampil untuk superadmin -->
+                <div id="sidebar-admin-section" style="display:none; margin-top:8px;">
+                    <div style="font-size:10px;font-weight:700;color:var(--color-outline);text-transform:uppercase;letter-spacing:0.8px;padding:8px 12px 4px;">Admin Panel</div>
+                    <a class="sidebar-link" href="dashboard.html">
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a class="sidebar-link" href="admin.html" id="sidebar-admin-link">
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">manage_accounts</span>
+                        Manajemen User
+                    </a>
+                    <a class="sidebar-link" href="moderation.html">
+                        <span class="material-symbols-outlined">shield</span>
+                        Moderasi Konten
+                    </a>
+                    <a class="sidebar-link" href="categories.html">
+                        <span class="material-symbols-outlined">category</span>
+                        Manajemen Kategori
+                    </a>
+                    <a class="sidebar-link" href="stats.html" id="sidebar-stats-link">
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">bar_chart</span>
+                        Statistik
+                    </a>
+                    <a class="sidebar-link" href="activity-log.html">
+                        <span class="material-symbols-outlined">history</span>
+                        Log Aktivitas
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a class="sidebar-footer-link" href="#" title="Aturan Forum">
+                    <span class="material-symbols-outlined">gavel</span>
+                </a>
+                <a class="sidebar-footer-link" href="#" title="Pusat Bantuan">
+                    <span class="material-symbols-outlined">help</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-feed">
+            <!-- Hot Threads Section -->
+            <section style="margin-bottom: var(--space-lg);">
+                <div class="section-title-wrapper">
+                    <span class="material-symbols-outlined text-error"
+                        style="font-variation-settings: 'FILL' 1; color: var(--color-error);">local_fire_department</span>
+                    <h2 class="section-title">Hot Threads</h2>
+                </div>
+                <div class="hot-threads-grid">
+                    <!-- Hot Card 1 -->
+                    <div class="hot-card">
+                        <span class="hot-card-badge">#TipsSkripsi</span>
+                        <h3 class="hot-card-title">Cara Lolos Turnitin di Bawah 15% Tanpa Paraphrase Tools Murahan</h3>
+                        <div class="hot-card-footer">
+                            <span>12k views</span>
+                            <div class="hot-card-likes">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+                                <span>842</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feed Section -->
+            <section>
+                <div class="feed-header">
+                    <div class="filter-tabs">
+                        <button class="tab-btn active">Terbaru</button>
+                        <button class="tab-btn">Terpopuler</button>
+                    </div>
+                    <button class="filter-btn">
+                        <span>Filter</span>
+                        <span class="material-symbols-outlined" style="font-size: 16px;">tune</span>
+                    </button>
+                </div>
+
+                <div class="thread-list">
+                    <!-- Thread Card 1 -->
+                    <article class="thread-card">
+                        <div class="author-block">
+                            <div class="author-avatar">
+                                <img alt="Author Avatar"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSEtwVKPYRyPHQ98nExrQBsJDgTzPNNMqJLXGXjgzWenu5FtwpK0lsgyosIJqSYBUT_w1ftRCyvkvbR1xW80WGfJ_Y-_RJrVoocJKPh8uPSm6ukV7cNiLT6WBwMbsB1eIITbuqebGA2KkxEuYZ6ZTOVVphLibJgq3hOW_NOoQiVE3mg0GJF6lUiMaA7vlgiOMVR82ls2QsF1-nAQlTHNyDuR5NHbaPAsXSzIoMp4ghB4Y75pBpfcubdssYQpMTMOpFKuAAD2kXLTdU" />
+                            </div>
+                            <div class="author-info">
+                                <div class="author-meta">
+                                    <span class="author-name">BudiSantoso_99</span>
+                                    <span class="badge-first">
+                                        <span class="material-symbols-outlined" style="font-size: 14px;">eco</span>
+                                        Utas Pertama
+                                    </span>
+                                    <span class="post-time">2 jam yang lalu</span>
+                                </div>
+                                <span class="author-sub">Universitas Brawijaya • Teknik Informatika</span>
+                            </div>
+                        </div>
+
+                        <h3 class="thread-title">Review Jujur Mata Kuliah Machine Learning Semester 5</h3>
+                        <p class="thread-preview">Halo semua, mau share pengalaman ngambil matkul ML semester ini. Jujur
+                            berat banget di awal karena butuh math foundation yang kuat (linear algebra &amp; calc).
+                            Buat yang mau ngambil, mending persiapin...</p>
+
+                        <div class="thread-tags">
+                            <span class="tag">#MachineLearning</span>
+                            <span class="tag">#ReviewMatkul</span>
+                        </div>
+
+                        <div class="thread-actions">
+                            <div class="action-group-likes">
+                                <button class="action-btn like-btn">
+                                    <span class="material-symbols-outlined">thumb_up</span>
+                                </button>
+                                <span class="like-count">45</span>
+                                <button class="action-btn dislike-btn">
+                                    <span class="material-symbols-outlined">thumb_down</span>
+                                </button>
+                            </div>
+                            <button class="action-btn">
+                                <span class="material-symbols-outlined">chat_bubble</span>
+                                <span>12 Komentar</span>
+                            </button>
+                            <button class="action-btn share-btn">
+                                <span class="material-symbols-outlined">share</span>
+                                <span>Bagikan</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Sidebar (Optional/Ad space/Trending topics for wider screens) -->
+        <aside class="trending-sidebar">
+            <h3 class="trending-title">Trending Topik</h3>
+            <div class="trending-tags-wrapper">
+                <span class="trending-tag">#BeasiswaLPDP</span>
+                <span class="trending-tag">#MagangMerdeka</span>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile FAB for Create Thread -->
+    <a href="create.html" class="mobile-fab">
+        <span class="material-symbols-outlined" style="font-size: 24px;">add</span>
+    </a>
+    <!-- Edit Thread Modal -->
+    <div id="edit-thread-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 class="edit-modal-title">Edit Utas</h3>
+                <button class="edit-modal-close" onclick="closeEditModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <input type="hidden" id="edit-thread-id" />
+            <div class="form-group">
+                <label class="form-label" for="edit-thread-title">Judul Utas</label>
+                <input type="text" id="edit-thread-title" class="form-input" placeholder="Masukkan judul utas"
+                    required />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Isi Utas</label>
+                <div class="rich-editor-container">
+                    <div class="editor-toolbar" style="padding: 4px 8px;">
+                        <button type="button" class="toolbar-btn" onclick="formatEditDoc('bold')" title="Tebal"><span
+                                class="material-symbols-outlined" style="font-size: 18px;">format_bold</span></button>
+                        <button type="button" class="toolbar-btn" onclick="formatEditDoc('italic')" title="Miring"><span
+                                class="material-symbols-outlined" style="font-size: 18px;">format_italic</span></button>
+                        <button type="button" class="toolbar-btn" onclick="formatEditDoc('underline')"
+                            title="Garis Bawah"><span class="material-symbols-outlined"
+                                style="font-size: 18px;">format_underlined</span></button>
+                    </div>
+                    <div class="editor-content" id="edit-editor-body" contenteditable="true"
+                        style="min-height: 150px; max-height: 300px;"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+                <button class="btn btn-secondary" onclick="closeEditModal()"
+                    style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none;">Batal</button>
+                <button class="btn btn-primary" onclick="saveEditedThread()"
+                    style="background-color: var(--color-primary); color: #fff;">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Beri Peringatan (Moderator/Admin) -->
+    <div id="warn-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 class="edit-modal-title" style="color: var(--color-warning, #d97706);">
+                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 20px;">warning</span>
+                    Beri Peringatan
+                </h3>
+                <button class="edit-modal-close" onclick="closeWarnModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <input type="hidden" id="warn-thread-id" />
+            <div style="margin-bottom: 16px; padding: 12px; background: var(--color-surface-container); border-radius: var(--radius-md); font-size: 14px;">
+                <p style="margin: 0 0 4px; color: var(--color-on-surface-variant); font-size: 12px;">Utas</p>
+                <p id="warn-thread-title" style="margin: 0; font-weight: 600; color: var(--color-on-surface);"></p>
+                <p style="margin: 6px 0 0; color: var(--color-on-surface-variant); font-size: 12px;">Kepada pengguna</p>
+                <p id="warn-target-user" style="margin: 0; font-weight: 600; color: var(--color-primary);"></p>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="warn-reason">Alasan Peringatan</label>
+                <textarea id="warn-reason" class="form-input" rows="3"
+                    placeholder="Jelaskan alasan pemberian peringatan..."
+                    style="resize: vertical; font-family: inherit; font-size: 14px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+                <button class="btn btn-secondary" onclick="closeWarnModal()"
+                    style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none;">Batal</button>
+                <button class="btn" onclick="submitWarning()"
+                    style="background-color: #d97706; color: #fff;">Kirim Peringatan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Laporkan Utas (User Biasa) -->
+    <div id="report-modal" class="edit-modal">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3 class="edit-modal-title" style="color: var(--color-error);">
+                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 20px;">flag</span>
+                    Laporkan Utas
+                </h3>
+                <button class="edit-modal-close" onclick="closeReportModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <input type="hidden" id="report-thread-id" />
+            <div style="margin-bottom: 16px; padding: 12px; background: var(--color-surface-container); border-radius: var(--radius-md); font-size: 14px;">
+                <p style="margin: 0 0 4px; color: var(--color-on-surface-variant); font-size: 12px;">Utas yang dilaporkan</p>
+                <p id="report-thread-title" style="margin: 0; font-weight: 600; color: var(--color-on-surface);"></p>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="report-reason">Alasan Laporan</label>
+                <select id="report-reason" class="form-input" style="font-family: inherit; font-size: 14px;">
+                    <option value="">-- Pilih alasan --</option>
+                    <option value="Konten tidak pantas">Konten tidak pantas</option>
+                    <option value="Spam atau iklan">Spam atau iklan</option>
+                    <option value="Informasi menyesatkan">Informasi menyesatkan</option>
+                    <option value="Ujaran kebencian">Ujaran kebencian</option>
+                    <option value="Melanggar aturan forum">Melanggar aturan forum</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+                <button class="btn btn-secondary" onclick="closeReportModal()"
+                    style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none;">Batal</button>
+                <button class="btn" onclick="submitReport()"
+                    style="background-color: var(--color-error); color: #fff;">Kirim Laporan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Detail Profil User -->
+    <div id="profile-modal" class="edit-modal">
+        <div class="edit-modal-content" style="max-width: 440px; padding: 0; overflow: hidden; gap: 0;">
+            <!-- Header Banner -->
+            <div style="height: 100px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%); position: relative;">
+                <button class="edit-modal-close" onclick="document.getElementById('profile-modal').classList.remove('show')" style="position: absolute; top: 12px; right: 12px; color: #fff; background: rgba(0,0,0,0.3); border-radius: 50%; padding: 6px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+                </button>
+            </div>
+            <!-- Profile Info Content -->
+            <div style="padding: 0 24px 24px; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <!-- Avatar -->
+                <div style="width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--color-surface-container-lowest); overflow: hidden; margin: -44px auto 12px; box-shadow: var(--shadow-md); background: #eee;">
+                    <img id="profile-modal-avatar" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+                <!-- Name & Verification Badge -->
+                <h3 id="profile-modal-name" style="font-size: 18px; font-weight: 700; color: var(--color-on-surface); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 0;">
+                    Nama Pengguna
+                </h3>
+                <!-- Role Badge -->
+                <span id="profile-modal-role" class="pill pill-blue" style="margin-top: 6px; font-size: 11px; display: inline-block;">Mahasiswa</span>
+                
+                <!-- Detailed Data Block -->
+                <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px; text-align: left; background: var(--color-surface-container-low); padding: 16px; border-radius: var(--radius-lg); border: 1px solid var(--color-outline-variant); width: 100%;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">badge</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">NIM / ID</div>
+                            <div id="profile-modal-nim" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">school</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Program Studi / UPBJJ</div>
+                            <div id="profile-modal-studies" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;" id="profile-modal-phone-row">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">phone</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">No. Telepon</div>
+                            <div id="profile-modal-phone" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; width: 100%;">
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-threads" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Utas</div>
+                    </div>
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-comments" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Komentar</div>
+                    </div>
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-likes" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Likes</div>
+                    </div>
+                </div>
+                
+                <!-- Footer Action Button -->
+                <button class="btn btn-primary" onclick="document.getElementById('profile-modal').classList.remove('show')" style="margin-top: 20px; width: 100%; font-size: 14px; padding: 10px 16px; border-radius: var(--radius-md);">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

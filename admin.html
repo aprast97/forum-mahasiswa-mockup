@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>Manajemen User — Panel Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/admin.css"/>
+    <link rel="stylesheet" href="styles/admin-shell.css"/>
+    <script src="js/database.js" defer></script>
+    <script src="js/admin-nav.js" defer></script>
+    <script src="js/admin.js" defer></script>
+</head>
+<body class="admin-shell-body">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <a href="index.html" class="admin-back-btn"><span class="material-symbols-outlined">home</span><span>Forum</span></a>
+        <div class="admin-header-divider"></div>
+        <div class="admin-header-brand">
+            <img src="assets/ut-logo.png" alt="UT" style="height:32px;"/>
+            <div><div class="admin-header-title">Panel Super Admin</div><div class="admin-header-sub">Forum Mahasiswa UT</div></div>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <span class="material-symbols-outlined" style="color:var(--color-secondary-container);font-variation-settings:'FILL' 1;">admin_panel_settings</span>
+        <span id="admin-name" class="admin-header-name">Super Admin</span>
+        <button class="admin-logout-btn" id="admin-logout-btn"><span class="material-symbols-outlined">logout</span>Keluar</button>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-nav-section">Utama</div>
+        <a href="dashboard.html" class="admin-nav-link"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <div class="admin-nav-section">Pengelolaan</div>
+        <a href="admin.html" class="admin-nav-link active"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</a>
+        <a href="moderation.html" class="admin-nav-link"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+        <a href="categories.html" class="admin-nav-link"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+        <div class="admin-nav-section">Laporan</div>
+        <a href="stats.html" class="admin-nav-link"><span class="material-symbols-outlined">bar_chart</span>Statistik</a>
+        <a href="activity-log.html" class="admin-nav-link"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+        <div class="admin-nav-divider"></div>
+        <a href="index.html" class="admin-nav-link nav-back"><span class="material-symbols-outlined">arrow_back</span>Kembali ke Forum</a>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div class="admin-page-title"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</div>
+            <div class="admin-page-subtitle">Kelola akun pengguna, role, dan status akses forum</div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="g4" style="margin-bottom:24px;">
+            <div class="kpi-card" style="--kpi-accent:#002045;">
+                <div class="kpi-icon" style="background:#dbeafe;"><span class="material-symbols-outlined" style="color:#002045;">groups</span></div>
+                <div><div class="kpi-number" id="stat-total">—</div><div class="kpi-label">Total User</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#7c3aed;">
+                <div class="kpi-icon" style="background:#ede9fe;"><span class="material-symbols-outlined" style="color:#7c3aed;">shield_person</span></div>
+                <div><div class="kpi-number" id="stat-moderator">—</div><div class="kpi-label">Moderator</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#d97706;">
+                <div class="kpi-icon" style="background:#ffedd5;"><span class="material-symbols-outlined" style="color:#d97706;">pause_circle</span></div>
+                <div><div class="kpi-number" id="stat-suspended">—</div><div class="kpi-label">Ditangguhkan</div></div>
+            </div>
+            <div class="kpi-card" style="--kpi-accent:#dc2626;">
+                <div class="kpi-icon" style="background:#fee2e2;"><span class="material-symbols-outlined" style="color:#dc2626;">block</span></div>
+                <div><div class="kpi-number" id="stat-banned">—</div><div class="kpi-label">Dibanned</div></div>
+            </div>
+        </div>
+
+        <!-- User Table -->
+        <div class="admin-card" style="margin-bottom:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="material-symbols-outlined" style="color:var(--color-primary);font-variation-settings:'FILL' 1;">people</span>
+                    <h2 style="font-size:15px;font-weight:700;color:var(--color-on-surface);">Daftar Pengguna</h2>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <div style="position:relative;">
+                        <span class="material-symbols-outlined" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--color-outline);">search</span>
+                        <input id="search-input" type="text" placeholder="Cari nama / NIM..." oninput="filterTable()" style="padding:8px 10px 8px 32px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);outline:none;width:200px;"/>
+                    </div>
+                    <select id="filter-role" onchange="filterTable()" style="padding:8px 10px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);cursor:pointer;outline:none;">
+                        <option value="all">Semua Role</option>
+                        <option value="superadmin">Super Admin</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="user">Mahasiswa</option>
+                    </select>
+                    <select id="filter-status" onchange="filterTable()" style="padding:8px 10px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);cursor:pointer;outline:none;">
+                        <option value="all">Semua Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="suspended">Ditangguhkan</option>
+                        <option value="banned">Dibanned</option>
+                    </select>
+                </div>
+            </div>
+            <div style="overflow-x:auto;border-radius:var(--radius-md);border:1px solid var(--color-outline-variant);">
+                <table class="a-table">
+                    <thead><tr>
+                        <th>Pengguna</th><th>NIM / ID</th><th>UPBJJ</th>
+                        <th>Role</th><th>Status</th>
+                        <th>Login Terakhir</th>
+                        <th style="text-align:center;">Aksi</th>
+                    </tr></thead>
+                    <tbody id="user-table-body"></tbody>
+                </table>
+            </div>
+            <div id="empty-state" style="display:none;" class="empty-state">
+                <span class="material-symbols-outlined">manage_search</span><p>Tidak ada pengguna yang cocok.</p>
+            </div>
+        </div>
+
+        <!-- Add Moderator -->
+        <div class="admin-card" style="max-width:500px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+                <span class="material-symbols-outlined" style="color:#7c3aed;font-variation-settings:'FILL' 1;">person_add</span>
+                <h2 style="font-size:15px;font-weight:700;color:var(--color-on-surface);">Tambah Moderator</h2>
+            </div>
+            <div id="add-mod-alert" style="display:none;padding:10px 14px;border-radius:var(--radius-md);font-size:13px;margin-bottom:12px;font-weight:500;"></div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div><label class="form-label" for="mod-nama">Nama Lengkap</label><input id="mod-nama" type="text" class="form-input" placeholder="Nama lengkap"/></div>
+                <div><label class="form-label" for="mod-nim">NIM / ID Unik</label><input id="mod-nim" type="text" class="form-input" placeholder="mod002"/></div>
+                <div><label class="form-label" for="mod-password">Password</label><input id="mod-password" type="password" class="form-input" placeholder="Password awal"/></div>
+                <div>
+                    <label class="form-label" for="mod-upbjj">UPBJJ</label>
+                    <select id="mod-upbjj" class="form-input">
+                        <option>UT Jakarta</option><option>UT Bandung</option><option>UT Surabaya</option>
+                        <option>UT Medan</option><option>UT Makassar</option><option>UT Yogyakarta</option>
+                        <option>UT Semarang</option><option>UT Palembang</option><option>UT Banda Aceh</option><option>UT Denpasar</option>
+                    </select>
+                </div>
+                <button onclick="handleAddModerator()" style="padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" onmouseover="this.style.background='#6d28d9'" onmouseout="this.style.background='#7c3aed'">
+                    <span class="material-symbols-outlined" style="font-size:16px;">add_moderator</span>Tambahkan Moderator
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal: Ban -->
+<div class="admin-modal-overlay" id="ban-modal">
+    <div class="admin-modal" style="max-width:420px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Ban Permanen Akun</span>
+            <button class="admin-modal-close" onclick="document.getElementById('ban-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size:13px;color:var(--color-on-surface-variant);margin-bottom:14px;">Akun <strong id="ban-target-name"></strong> akan diblokir secara permanen dan tidak dapat login.</p>
+            <input type="hidden" id="ban-target-nim"/>
+            <label class="form-label" for="ban-reason">Alasan Ban <span style="color:#dc2626;">*</span></label>
+            <textarea id="ban-reason" class="form-input" rows="3" placeholder="Masukkan alasan ban..." style="resize:vertical;"></textarea>
+        </div>
+        <div class="admin-modal-footer">
+            <button class="btn-admin btn-secondary-admin" onclick="document.getElementById('ban-modal').classList.remove('show')">Batal</button>
+            <button class="btn-admin btn-danger-admin" onclick="confirmBan()"><span class="material-symbols-outlined" style="font-size:15px;">block</span>Ban Permanen</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Delete User -->
+<div class="admin-modal-overlay" id="delete-user-modal">
+    <div class="admin-modal" style="max-width:400px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Hapus Akun Pengguna</span>
+            <button class="admin-modal-close" onclick="document.getElementById('delete-user-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size:13px;color:var(--color-on-surface-variant);">Hapus akun <strong id="delete-user-name"></strong>? Tindakan ini <strong style="color:#dc2626;">tidak dapat dibatalkan</strong>.</p>
+            <input type="hidden" id="delete-user-nim"/>
+        </div>
+        <div class="admin-modal-footer">
+            <button class="btn-admin btn-secondary-admin" onclick="document.getElementById('delete-user-modal').classList.remove('show')">Batal</button>
+            <button class="btn-admin btn-danger-admin" onclick="confirmDeleteUser()"><span class="material-symbols-outlined" style="font-size:15px;">delete_forever</span>Hapus Permanen</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: User History -->
+<div class="admin-modal-overlay" id="history-modal">
+    <div class="admin-modal" style="max-width:600px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Riwayat Aktivitas: <span id="history-user-name"></span></span>
+            <button class="admin-modal-close" onclick="document.getElementById('history-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <div id="history-content"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

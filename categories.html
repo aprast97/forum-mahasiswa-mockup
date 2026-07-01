@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>Manajemen Kategori — Panel Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/admin.css"/>
+    <link rel="stylesheet" href="styles/admin-shell.css"/>
+    <script src="js/database.js" defer></script>
+    <script src="js/admin-nav.js" defer></script>
+    <script src="js/categories.js" defer></script>
+</head>
+<body class="admin-shell-body">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <a href="index.html" class="admin-back-btn"><span class="material-symbols-outlined">home</span><span>Forum</span></a>
+        <div class="admin-header-divider"></div>
+        <div class="admin-header-brand">
+            <img src="assets/ut-logo.png" alt="UT" style="height:32px;"/>
+            <div><div class="admin-header-title">Panel Super Admin</div><div class="admin-header-sub">Forum Mahasiswa UT</div></div>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <span class="material-symbols-outlined" style="color:var(--color-secondary-container);font-variation-settings:'FILL' 1;">admin_panel_settings</span>
+        <span id="admin-name" class="admin-header-name">Super Admin</span>
+        <button class="admin-logout-btn" id="admin-logout-btn"><span class="material-symbols-outlined">logout</span>Keluar</button>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-nav-section">Utama</div>
+        <a href="dashboard.html" class="admin-nav-link"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <div class="admin-nav-section">Pengelolaan</div>
+        <a href="admin.html" class="admin-nav-link"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</a>
+        <a href="moderation.html" class="admin-nav-link"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+        <a href="categories.html" class="admin-nav-link active"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+        <div class="admin-nav-section">Laporan</div>
+        <a href="stats.html" class="admin-nav-link"><span class="material-symbols-outlined">bar_chart</span>Statistik</a>
+        <a href="activity-log.html" class="admin-nav-link"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+        <div class="admin-nav-divider"></div>
+        <a href="index.html" class="admin-nav-link nav-back"><span class="material-symbols-outlined">arrow_back</span>Kembali ke Forum</a>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div class="admin-page-title"><span class="material-symbols-outlined">category</span>Manajemen Kategori</div>
+            <div class="admin-page-subtitle">Kelola kategori yang tersedia saat membuat thread</div>
+        </div>
+
+        <div class="g2" style="align-items:start;gap:24px;">
+
+            <!-- List Kategori -->
+            <div class="admin-card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <h2 style="font-size:15px;font-weight:700;color:var(--color-on-surface);display:flex;align-items:center;gap:8px;">
+                        <span class="material-symbols-outlined" style="font-size:18px;color:var(--color-primary);font-variation-settings:'FILL' 1;">list</span>
+                        Daftar Kategori
+                    </h2>
+                    <span id="cat-count" class="pill pill-blue"></span>
+                </div>
+                <div id="categories-list"></div>
+            </div>
+
+            <!-- Form Tambah -->
+            <div>
+                <div class="admin-card" style="margin-bottom:16px;">
+                    <h2 style="font-size:15px;font-weight:700;color:var(--color-on-surface);display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                        <span class="material-symbols-outlined" style="font-size:18px;color:#059669;font-variation-settings:'FILL' 1;">add_circle</span>
+                        Tambah Kategori Baru
+                    </h2>
+                    <div id="cat-add-alert" style="display:none;padding:10px 14px;border-radius:var(--radius-md);font-size:13px;margin-bottom:12px;font-weight:500;"></div>
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div>
+                            <label class="form-label" for="new-cat-name">Nama Kategori</label>
+                            <input id="new-cat-name" type="text" class="form-input" placeholder="Contoh: Beasiswa"/>
+                        </div>
+                        <div>
+                            <label class="form-label" for="new-cat-icon">Icon (Material Symbols)</label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input id="new-cat-icon" type="text" class="form-input" placeholder="Contoh: school" oninput="previewIcon()" style="flex:1;"/>
+                                <div style="width:40px;height:40px;border-radius:8px;background:var(--color-surface-container);display:flex;align-items:center;justify-content:center;border:1px solid var(--color-outline-variant);">
+                                    <span class="material-symbols-outlined" id="icon-preview" style="font-size:22px;color:var(--color-primary);">category</span>
+                                </div>
+                            </div>
+                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                                <span style="font-size:11px;color:var(--color-on-surface-variant);">Saran:</span>
+                                ${["school","assignment","groups","work","description","campaign","storefront","chat","star","local_library","sports_esports","art_track","science","calculate","code","music_note"].map(ic =>
+                                    `<button onclick="document.getElementById('new-cat-icon').value='${ic}';previewIcon();" style="background:none;border:none;cursor:pointer;padding:2px;" title="${ic}"><span class="material-symbols-outlined" style="font-size:18px;color:var(--color-on-surface-variant);">${ic}</span></button>`
+                                ).join("")}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label" for="new-cat-color">Warna</label>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <input id="new-cat-color" type="color" value="#002045" style="width:40px;height:36px;border-radius:6px;border:1px solid var(--color-outline-variant);cursor:pointer;padding:2px;"/>
+                                <span style="font-size:13px;color:var(--color-on-surface-variant);">Pilih warna kategori</span>
+                            </div>
+                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                                ${["#002045","#7c3aed","#059669","#0891b2","#dc2626","#d97706","#6b7280","#db2777"].map(c =>
+                                    `<button onclick="document.getElementById('new-cat-color').value='${c}';" style="width:24px;height:24px;border-radius:50%;background:${c};border:2px solid transparent;cursor:pointer;" title="${c}"></button>`
+                                ).join("")}
+                            </div>
+                        </div>
+                        <button onclick="addCategory()" style="padding:10px;background:#059669;color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
+                            <span class="material-symbols-outlined" style="font-size:16px;">add</span>Tambah Kategori
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info Box -->
+                <div style="background:var(--color-surface-container);border:1px solid var(--color-outline-variant);border-radius:var(--radius-lg);padding:14px 16px;">
+                    <div style="font-size:12px;font-weight:700;color:var(--color-on-surface-variant);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">ℹ️ Info</div>
+                    <ul style="font-size:12px;color:var(--color-on-surface-variant);padding-left:16px;margin:0;line-height:1.6;">
+                        <li>Gunakan ↑↓ untuk mengubah urutan kategori</li>
+                        <li>Perubahan langsung berlaku di halaman Buat Thread</li>
+                        <li>Kategori tidak bisa dihapus jika masih ada thread</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Modal: Confirm Delete Category -->
+<div class="admin-modal-overlay" id="del-cat-modal">
+    <div class="admin-modal" style="max-width:400px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Hapus Kategori</span>
+            <button class="admin-modal-close" onclick="document.getElementById('del-cat-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size:13px;color:var(--color-on-surface-variant);">Hapus kategori "<strong id="del-cat-name"></strong>"? Thread yang sudah ada tidak akan terpengaruh.</p>
+            <input type="hidden" id="del-cat-id"/>
+        </div>
+        <div class="admin-modal-footer">
+            <button class="btn-admin btn-secondary-admin" onclick="document.getElementById('del-cat-modal').classList.remove('show')">Batal</button>
+            <button class="btn-admin btn-danger-admin" onclick="confirmDeleteCategory()"><span class="material-symbols-outlined" style="font-size:15px;">delete</span>Hapus</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

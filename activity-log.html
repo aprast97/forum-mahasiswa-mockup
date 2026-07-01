@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>Log Aktivitas — Panel Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/admin.css"/>
+    <link rel="stylesheet" href="styles/admin-shell.css"/>
+    <script src="js/database.js" defer></script>
+    <script src="js/admin-nav.js" defer></script>
+    <script src="js/activity-log.js" defer></script>
+</head>
+<body class="admin-shell-body">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <a href="index.html" class="admin-back-btn"><span class="material-symbols-outlined">home</span><span>Forum</span></a>
+        <div class="admin-header-divider"></div>
+        <div class="admin-header-brand">
+            <img src="assets/ut-logo.png" alt="UT" style="height:32px;"/>
+            <div><div class="admin-header-title">Panel Super Admin</div><div class="admin-header-sub">Forum Mahasiswa UT</div></div>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <span class="material-symbols-outlined" style="color:var(--color-secondary-container);font-variation-settings:'FILL' 1;">admin_panel_settings</span>
+        <span id="admin-name" class="admin-header-name">Super Admin</span>
+        <button class="admin-logout-btn" id="admin-logout-btn"><span class="material-symbols-outlined">logout</span>Keluar</button>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-nav-section">Utama</div>
+        <a href="dashboard.html" class="admin-nav-link"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <div class="admin-nav-section">Pengelolaan</div>
+        <a href="admin.html" class="admin-nav-link"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</a>
+        <a href="moderation.html" class="admin-nav-link"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+        <a href="categories.html" class="admin-nav-link"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+        <div class="admin-nav-section">Laporan</div>
+        <a href="stats.html" class="admin-nav-link"><span class="material-symbols-outlined">bar_chart</span>Statistik</a>
+        <a href="activity-log.html" class="admin-nav-link active"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+        <div class="admin-nav-divider"></div>
+        <a href="index.html" class="admin-nav-link nav-back"><span class="material-symbols-outlined">arrow_back</span>Kembali ke Forum</a>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div class="admin-page-title"><span class="material-symbols-outlined">history</span>Log Aktivitas</div>
+            <div class="admin-page-subtitle">Riwayat semua tindakan admin dan moderator</div>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="admin-card" style="margin-bottom:16px;">
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                <div style="position:relative;">
+                    <span class="material-symbols-outlined" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--color-outline);">search</span>
+                    <input id="log-search" type="text" placeholder="Cari pelaku / target..." oninput="filterLog()" style="padding:8px 10px 8px 32px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);outline:none;width:220px;"/>
+                </div>
+                <select id="log-filter-action" onchange="filterLog()" style="padding:8px 10px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);cursor:pointer;outline:none;">
+                    <option value="all">Semua Aksi</option>
+                    <optgroup label="User">
+                        <option value="ban_user">Ban User</option>
+                        <option value="unban_user">Unban User</option>
+                        <option value="delete_user">Hapus User</option>
+                        <option value="reset_password">Reset Password</option>
+                        <option value="verify_user">Verifikasi</option>
+                        <option value="suspend_user">Suspend</option>
+                        <option value="promote_user">Promote</option>
+                        <option value="demote_user">Demote</option>
+                    </optgroup>
+                    <optgroup label="Thread">
+                        <option value="delete_thread">Hapus Thread</option>
+                        <option value="lock_thread">Lock Thread</option>
+                        <option value="unlock_thread">Unlock Thread</option>
+                        <option value="pin_thread">Pin Thread</option>
+                        <option value="archive_thread">Arsip Thread</option>
+                        <option value="restore_thread">Restore Thread</option>
+                    </optgroup>
+                    <optgroup label="Lainnya">
+                        <option value="delete_comment">Hapus Komentar</option>
+                        <option value="close_report">Tutup Laporan</option>
+                        <option value="add_category">Tambah Kategori</option>
+                        <option value="delete_category">Hapus Kategori</option>
+                    </optgroup>
+                </select>
+                <select id="log-filter-type" onchange="filterLog()" style="padding:8px 10px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);cursor:pointer;outline:none;">
+                    <option value="all">Semua Target</option>
+                    <option value="user">User</option>
+                    <option value="thread">Thread</option>
+                    <option value="comment">Komentar</option>
+                    <option value="report">Laporan</option>
+                    <option value="category">Kategori</option>
+                </select>
+                <span id="log-count" style="font-size:12px;color:var(--color-on-surface-variant);margin-left:auto;"></span>
+                <button onclick="clearLog()" style="display:flex;align-items:center;gap:5px;padding:7px 12px;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;border-radius:var(--radius-md);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;" title="Hapus semua log">
+                    <span class="material-symbols-outlined" style="font-size:14px;">delete_sweep</span>Hapus Log
+                </button>
+            </div>
+        </div>
+
+        <!-- Log Table -->
+        <div class="admin-card">
+            <div style="overflow-x:auto;">
+                <table class="a-table">
+                    <thead><tr>
+                        <th>Waktu</th><th>Aksi</th><th>Pelaku</th>
+                        <th>Target</th><th>Detail</th>
+                    </tr></thead>
+                    <tbody id="log-table-body"></tbody>
+                </table>
+            </div>
+            <div id="log-empty" style="display:none;" class="empty-state">
+                <span class="material-symbols-outlined">history</span><p>Belum ada aktivitas tercatat.</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

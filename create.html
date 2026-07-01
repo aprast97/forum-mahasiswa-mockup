@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Buat Utas - ScholarForum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Scripts for Logic & Database -->
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/create.js" defer></script>
+</head>
+
+<body>
+    <!-- TopNavBar -->
+    <header class="app-header">
+        <div class="header-container">
+            <!-- Left: Menu Icon & Logo -->
+            <div class="header-left">
+                <button class="hamburger-menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a class="brand-logo" href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/ut-logo.png" alt="Logo Universitas Terbuka" style="height: 36px; width: auto;" />
+                    <span class="logo-title-3lines">
+                        <span>FORUM</span>
+                        <span>MAHASISWA</span>
+                        <span>UT</span>
+                    </span>
+                </a>
+            </div>
+            
+            <!-- Center: Search Input -->
+            <div class="header-search">
+                <input class="search-input" placeholder="Cari di sini" type="text" disabled />
+            </div>
+            
+            <!-- Right: Actions -->
+            <div class="header-actions">
+                <div class="profile-dropdown-wrapper">
+                    <div class="avatar-container" id="avatar-btn">
+                        <img alt="User Profile Avatar" id="dropdown-avatar-img"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-" />
+                    </div>
+                    <!-- Profile Dropdown Menu -->
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <span class="dropdown-user-name" id="dropdown-user-name">Nama Mahasiswa</span>
+                            <span class="dropdown-user-nim" id="dropdown-user-nim">NIM: 041234567</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="dropdown-profile-btn">
+                            <span class="material-symbols-outlined">person</span>
+                            Profil Saya
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="alert('Fitur Pengaturan Akun akan segera hadir!')">
+                            <span class="material-symbols-outlined">settings</span>
+                            Pengaturan Akun
+                        </a>
+                        <button class="dropdown-item text-error" id="btn-dropdown-logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="create-thread-container">
+        <div class="create-thread-card">
+            <h1 class="create-thread-title">Buat Utas Baru</h1>
+
+            <form class="form-layout" action="#" method="POST" id="create-thread-form">
+                <!-- Judul Utas -->
+                <div class="form-group">
+                    <label class="form-label" for="title">Judul Utas</label>
+                    <input class="form-input" id="title" name="title"
+                        placeholder="Tuliskan judul yang menarik dan deskriptif" required="" type="text" />
+                </div>
+
+                <!-- Kategori -->
+                <div class="form-group">
+                    <label class="form-label" for="category">Kategori</label>
+                    <div class="input-container">
+                        <select class="form-input" id="category" name="category" required="">
+                            <option disabled="" selected="" value="">Pilih Kategori Topik</option>
+                            <option value="Akademik & Perkuliahan">Akademik & Perkuliahan</option>
+                            <option value="Info Kampus">Info Kampus</option>
+                            <option value="Teknologi & Informasi">Teknologi & Informasi</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                        <span class="material-symbols-outlined select-arrow">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Kategori Manual (Hidden by default) -->
+                <div class="form-group" id="custom-category-group" style="display: none;">
+                    <label class="form-label" for="custom-category">Masukkan Kategori Baru</label>
+                    <input class="form-input" id="custom-category" name="custom-category"
+                        placeholder="Tuliskan nama kategori baru" type="text" />
+                </div>
+
+                <!-- Isi Utas (Text Editor) -->
+                <div class="form-group">
+                    <label class="form-label">Isi Utas</label>
+                    <div class="rich-editor-container">
+                        <!-- Toolbar -->
+                        <div class="editor-toolbar">
+                            <button type="button" class="toolbar-btn" data-command="bold" title="Tebal (Ctrl+B)">
+                                <span class="material-symbols-outlined">format_bold</span>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="italic" title="Miring (Ctrl+I)">
+                                <span class="material-symbols-outlined">format_italic</span>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="underline"
+                                title="Garis Bawah (Ctrl+U)">
+                                <span class="material-symbols-outlined">format_underlined</span>
+                            </button>
+                            <span class="toolbar-divider"></span>
+                            <button type="button" class="toolbar-btn" data-command="justifyLeft" title="Rata Kiri">
+                                <span class="material-symbols-outlined">format_align_left</span>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="justifyCenter" title="Rata Tengah">
+                                <span class="material-symbols-outlined">format_align_center</span>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="justifyRight" title="Rata Kanan">
+                                <span class="material-symbols-outlined">format_align_right</span>
+                            </button>
+                            <span class="toolbar-divider"></span>
+                            <button type="button" class="toolbar-btn" id="btn-insert-image" title="Masukkan Gambar">
+                                <span class="material-symbols-outlined">image</span>
+                            </button>
+                            <input type="file" id="image-upload-input" accept="image/*" style="display: none;" />
+                        </div>
+
+                        <!-- Editable Area -->
+                        <div class="editor-content" id="editor-body" contenteditable="true"
+                            placeholder="Tuliskan detail pembahasan utas Anda di sini..."></div>
+                    </div>
+                    <!-- Hidden textarea to store html content for submission validation -->
+                    <textarea id="content" name="content" style="display: none;"></textarea>
+                </div>
+
+                <!-- Tags (Optional) -->
+                <div class="form-group">
+                    <label class="form-label" for="tags">Tag</label>
+                    <input class="form-input" id="tags" name="tags" placeholder="Contoh: tips, skripsi, uas"
+                        type="text" />
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 16px;">
+                    <a href="index.html" class="btn btn-icon"
+                        style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none;">
+                        Batal
+                    </a>
+                    <button class="btn btn-secondary btn-icon" type="submit">
+                        Kirim Utas
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal: Detail Profil User -->
+    <div id="profile-modal" class="edit-modal">
+        <div class="edit-modal-content" style="max-width: 440px; padding: 0; overflow: hidden; gap: 0;">
+            <!-- Header Banner -->
+            <div style="height: 100px; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%); position: relative;">
+                <button class="edit-modal-close" onclick="document.getElementById('profile-modal').classList.remove('show')" style="position: absolute; top: 12px; right: 12px; color: #fff; background: rgba(0,0,0,0.3); border-radius: 50%; padding: 6px; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+                </button>
+            </div>
+            <!-- Profile Info Content -->
+            <div style="padding: 0 24px 24px; position: relative; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                <!-- Avatar -->
+                <div style="width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--color-surface-container-lowest); overflow: hidden; margin: -44px auto 12px; box-shadow: var(--shadow-md); background: #eee;">
+                    <img id="profile-modal-avatar" src="" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;" />
+                </div>
+                <!-- Name & Verification Badge -->
+                <h3 id="profile-modal-name" style="font-size: 18px; font-weight: 700; color: var(--color-on-surface); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 0;">
+                    Nama Pengguna
+                </h3>
+                <!-- Role Badge -->
+                <span id="profile-modal-role" class="pill pill-blue" style="margin-top: 6px; font-size: 11px; display: inline-block;">Mahasiswa</span>
+                
+                <!-- Detailed Data Block -->
+                <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 10px; text-align: left; background: var(--color-surface-container-low); padding: 16px; border-radius: var(--radius-lg); border: 1px solid var(--color-outline-variant); width: 100%;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">badge</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">NIM / ID</div>
+                            <div id="profile-modal-nim" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">school</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Program Studi / UPBJJ</div>
+                            <div id="profile-modal-studies" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;" id="profile-modal-phone-row">
+                        <span class="material-symbols-outlined" style="color: var(--color-outline); font-size: 18px;">phone</span>
+                        <div>
+                            <div style="font-size: 10px; color: var(--color-on-surface-variant); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">No. Telepon</div>
+                            <div id="profile-modal-phone" style="font-size: 13px; font-weight: 600; color: var(--color-on-surface);">N/A</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px; width: 100%;">
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-threads" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Utas</div>
+                    </div>
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-comments" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Komentar</div>
+                    </div>
+                    <div style="background: var(--color-surface-container-low); border: 1px solid var(--color-outline-variant); padding: 8px; border-radius: var(--radius-md); text-align: center;">
+                        <div id="profile-stat-likes" style="font-size: 16px; font-weight: 700; color: var(--color-primary);">0</div>
+                        <div style="font-size: 9px; color: var(--color-on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Likes</div>
+                    </div>
+                </div>
+                
+                <!-- Footer Action Button -->
+                <button class="btn btn-primary" onclick="document.getElementById('profile-modal').classList.remove('show')" style="margin-top: 20px; width: 100%; font-size: 14px; padding: 10px 16px; border-radius: var(--radius-md);">Tutup</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

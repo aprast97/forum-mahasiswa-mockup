@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Profil Pengguna - ScholarForum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Scripts for Logic & Database -->
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/profile.js" defer></script>
+
+    <style>
+        .profile-header-banner {
+            height: 160px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            position: relative;
+        }
+
+        .profile-card-container {
+            background-color: var(--color-surface-container-lowest);
+            border: 1px solid var(--color-outline-variant);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .profile-card-body {
+            padding: 0 32px 32px;
+            position: relative;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid var(--color-surface-container-lowest);
+            overflow: hidden;
+            margin: -60px 0 16px 0;
+            box-shadow: var(--shadow-md);
+            background-color: #eee;
+        }
+
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-main-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .profile-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-outline-variant);
+        }
+
+        .profile-meta-item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .profile-meta-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background-color: var(--color-surface-container-low);
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--color-outline-variant);
+        }
+
+        .profile-stats-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .profile-stat-box {
+            text-align: left;
+        }
+
+        .profile-stat-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-primary);
+            line-height: 1;
+        }
+
+        .profile-stat-lbl {
+            font-size: 11px;
+            color: var(--color-on-surface-variant);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .profile-tabs-header {
+            display: flex;
+            gap: 16px;
+            border-bottom: 1px solid var(--color-outline-variant);
+            margin-bottom: 20px;
+        }
+
+        .profile-tab-btn {
+            background: none;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--color-on-surface-variant);
+            padding: 8px 4px 12px 4px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .profile-tab-btn:hover {
+            color: var(--color-primary);
+        }
+
+        .profile-tab-btn.active {
+            color: var(--color-primary);
+        }
+
+        .profile-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-primary);
+            border-radius: var(--radius-full);
+        }
+
+        .profile-tab-content {
+            display: none;
+        }
+
+        .profile-tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .profile-main-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .profile-avatar-large {
+                margin-top: -50px;
+            }
+
+            .profile-card-body {
+                padding: 0 16px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TopNavBar -->
+    <header class="app-header">
+        <div class="header-container">
+            <!-- Left: Menu Icon & Logo -->
+            <div class="header-left">
+                <button class="hamburger-menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a class="brand-logo" href="index.html"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/ut-logo.png" alt="Logo Universitas Terbuka" style="height: 36px; width: auto;" />
+                    <span class="logo-title-3lines">
+                        <span>FORUM</span>
+                        <span>MAHASISWA</span>
+                        <span>UNIVERSITAS TERBUKA</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Center: Search Input -->
+            <div class="header-search">
+                <input class="search-input" placeholder="Cari di sini" type="text" id="header-search-disabled"
+                    disabled />
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="header-actions">
+                <a href="create.html" class="btn-buat-post">
+                    <span class="material-symbols-outlined">edit</span>
+                    Buat Utas
+                </a>
+                <div class="profile-dropdown-wrapper">
+                    <div class="avatar-container" id="avatar-btn">
+                        <img alt="User Profile Avatar" id="dropdown-avatar-img"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-" />
+                    </div>
+                    <!-- Profile Dropdown Menu -->
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <span class="dropdown-user-name" id="dropdown-user-name">Nama Mahasiswa</span>
+                            <span class="dropdown-user-nim" id="dropdown-user-nim">NIM: 041234567</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="dropdown-profile-btn">
+                            <span class="material-symbols-outlined">person</span>
+                            Profil Saya
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="alert('Fitur Pengaturan Akun akan segera hadir!')">
+                            <span class="material-symbols-outlined">settings</span>
+                            Pengaturan Akun
+                        </a>
+                        <button class="dropdown-item text-error" id="btn-dropdown-logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-row-layout">
+        <!-- SideNavBar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">S</div>
+                <div class="logo-info">
+                    <h2>Forum Mahasiswa</h2>
+                    <p>Modern Scholar</p>
+                </div>
+            </div>
+
+            <!-- User Rank Widget -->
+            <div class="rank-widget">
+                <p class="rank-widget-label">Status Kamu</p>
+                <div class="rank-widget-value">
+                    <span class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    <span>Mahasiswa Berprestasi</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: 75%"></div>
+                </div>
+                <p class="rank-widget-footer">150 / 200 rep</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="sidebar-link" href="index.html" id="sidebar-home-link">
+                    <span class="material-symbols-outlined">home</span>
+                    Beranda
+                </a>
+                <a class="sidebar-link" href="index.html?feed=hot" id="sidebar-hot-link">
+                    <span class="material-symbols-outlined text-error">local_fire_department</span>
+                    Hot Threads
+                </a>
+                <a class="sidebar-link" href="#" onclick="alert('Fitur Kategori akan segera hadir!')">
+                    <span class="material-symbols-outlined">category</span>
+                    Kategori
+                </a>
+                <a class="sidebar-link" href="index.html?feed=saved" id="sidebar-saved-link">
+                    <span class="material-symbols-outlined">bookmark</span>
+                    Utas Disimpan
+                </a>
+                <!-- Admin Panel Section -->
+                <div id="sidebar-admin-section" style="display:none; margin-top:8px;">
+                    <div
+                        style="font-size:10px;font-weight:700;color:var(--color-outline);text-transform:uppercase;letter-spacing:0.8px;padding:8px 12px 4px;">
+                        Admin Panel</div>
+                    <a class="sidebar-link" href="dashboard.html">
+                        <span class="material-symbols-outlined"
+                            style="font-variation-settings:'FILL' 1;">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a class="sidebar-link" href="admin.html">
+                        <span class="material-symbols-outlined"
+                            style="font-variation-settings:'FILL' 1;">manage_accounts</span>
+                        Manajemen User
+                    </a>
+                    <a class="sidebar-link" href="moderation.html">
+                        <span class="material-symbols-outlined">shield</span>
+                        Moderasi Konten
+                    </a>
+                    <a class="sidebar-link" href="categories.html">
+                        <span class="material-symbols-outlined">category</span>
+                        Manajemen Kategori
+                    </a>
+                    <a class="sidebar-link" href="stats.html">
+                        <span class="material-symbols-outlined"
+                            style="font-variation-settings:'FILL' 1;">bar_chart</span>
+                        Statistik
+                    </a>
+                    <a class="sidebar-link" href="activity-log.html">
+                        <span class="material-symbols-outlined">history</span>
+                        Log Aktivitas
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-feed">
+
+            <!-- User Profile Card -->
+            <div class="profile-card-container">
+                <div class="profile-header-banner"></div>
+                <div class="profile-card-body">
+                    <div class="profile-main-info">
+                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                            <div class="profile-avatar-large">
+                                <img id="user-profile-avatar" src="" alt="Avatar" />
+                            </div>
+                            <h1 id="user-profile-name"
+                                style="font-size: 24px; font-weight: 700; color: var(--color-on-surface); display: flex; align-items: center; gap: 8px;">
+                                Nama Pengguna
+                            </h1>
+                            <div
+                                style="display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                                <span id="user-profile-role" class="pill pill-blue">Mahasiswa</span>
+                                <span id="user-profile-upbjj-badge" class="pill pill-gray">UT Jakarta</span>
+                            </div>
+                        </div>
+
+                        <!-- Statistics -->
+                        <div class="profile-stats-row">
+                            <div class="profile-stat-box">
+                                <div class="profile-stat-val" id="stat-val-threads">0</div>
+                                <div class="profile-stat-lbl">Utas</div>
+                            </div>
+                            <div class="profile-stat-box">
+                                <div class="profile-stat-val" id="stat-val-comments">0</div>
+                                <div class="profile-stat-lbl">Komentar</div>
+                            </div>
+                            <div class="profile-stat-box">
+                                <div class="profile-stat-val" id="stat-val-likes">0</div>
+                                <div class="profile-stat-lbl">Likes</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Meta Grid (Detailed info) -->
+                    <div class="profile-meta-grid">
+                        <div class="profile-meta-item">
+                            <div class="profile-meta-icon"><span class="material-symbols-outlined">badge</span></div>
+                            <div>
+                                <div style="font-size: 11px; color: var(--color-on-surface-variant); font-weight: 500;">
+                                    NIM / ID</div>
+                                <div style="font-size: 14px; font-weight: 600;" id="meta-val-nim">041234567</div>
+                            </div>
+                        </div>
+                        <div class="profile-meta-item">
+                            <div class="profile-meta-icon"><span class="material-symbols-outlined">school</span></div>
+                            <div>
+                                <div style="font-size: 11px; color: var(--color-on-surface-variant); font-weight: 500;">
+                                    Program Studi</div>
+                                <div style="font-size: 14px; font-weight: 600;" id="meta-val-program">Sistem Informasi
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-meta-item" id="meta-row-phone">
+                            <div class="profile-meta-icon"><span class="material-symbols-outlined">phone</span></div>
+                            <div>
+                                <div style="font-size: 11px; color: var(--color-on-surface-variant); font-weight: 500;">
+                                    No. Telepon</div>
+                                <div style="font-size: 14px; font-weight: 600;" id="meta-val-phone">08123456789</div>
+                            </div>
+                        </div>
+                        <div class="profile-meta-item">
+                            <div class="profile-meta-icon"><span class="material-symbols-outlined">map</span></div>
+                            <div>
+                                <div style="font-size: 11px; color: var(--color-on-surface-variant); font-weight: 500;">
+                                    UPBJJ UT</div>
+                                <div style="font-size: 14px; font-weight: 600;" id="meta-val-upbjj">UT Jakarta</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Self action: Edit Profile button -->
+                    <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: flex-end;"
+                        id="profile-action-container">
+                        <!-- Filled by JS based on whether profile is owner -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Menu -->
+            <div class="profile-tabs-header">
+                <button class="profile-tab-btn active" id="tab-btn-threads" onclick="switchProfileTab('threads')">Daftar
+                    Utas</button>
+                <button class="profile-tab-btn" id="tab-btn-saved" onclick="switchProfileTab('saved')"
+                    style="display: none;">Disimpan</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div>
+                <!-- Threads Tab -->
+                <div class="profile-tab-content active" id="tab-content-threads">
+                    <div class="thread-list" id="profile-threads-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Saved Tab (Only visible if self profile) -->
+                <div class="profile-tab-content" id="tab-content-saved">
+                    <div class="thread-list" id="profile-saved-container">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+
+</html>

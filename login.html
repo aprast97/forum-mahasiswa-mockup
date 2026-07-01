@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Forum Mahasiswa UT - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Scripts for Logic & Database -->
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <script src="js/login.js" defer></script>
+</head>
+
+<body class="auth-body">
+    <!-- Decorative Background Elements -->
+    <div class="auth-background">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+    </div>
+
+    <div class="auth-container">
+        <!-- Login Card -->
+        <main class="auth-card">
+            <!-- Branding -->
+            <div class="auth-header">
+                <div class="auth-logo-badge" style="background-color: transparent; box-shadow: none; width: auto; height: auto; margin-bottom: 8px;">
+                    <img src="assets/ut-logo.png" alt="Logo Universitas Terbuka" style="height: 72px; width: auto;" />
+                </div>
+                <h1 class="auth-title">FORMAWA UT</h1>
+                <p class="auth-subtitle">Forum Mahasiswa Universitas Terbuka</p>
+            </div>
+
+            <!-- Login Form -->
+            <form action="#" class="form-layout" method="POST">
+                <div class="form-group">
+                    <label class="form-label" for="nim">NIM (Nomor Induk Mahasiswa)</label>
+                    <div class="input-container">
+                        <span class="material-symbols-outlined input-icon-left">badge</span>
+                        <input class="form-input has-icon-left" id="nim" name="nim" placeholder="Masukkan NIM Anda"
+                            required="" type="text" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-row" style="margin-top: 0; width: 100%;">
+                        <label class="form-label" for="password">Password</label>
+                        <a class="forgot-link" href="#">Lupa Password?</a>
+                    </div>
+                    <div class="input-container">
+                        <span class="material-symbols-outlined input-icon-left">lock</span>
+                        <input class="form-input has-icon-left has-icon-right" id="password" name="password"
+                            placeholder="••••••••" required="" type="password" />
+                        <button class="input-icon-right" type="button">
+                            <span class="material-symbols-outlined">visibility_off</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="checkbox-row">
+                    <label class="checkbox-option" for="remember-me">
+                        <input class="checkbox-input" id="remember-me" name="remember-me" type="checkbox" />
+                        <span class="checkbox-text">Ingat saya</span>
+                    </label>
+                </div>
+
+                <button class="btn btn-secondary btn-full-width btn-icon" type="submit">
+                    Login
+                    <span class="material-symbols-outlined">login</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>
+                    Belum memiliki akun?
+                    <a href="regist.html">Daftar Akun Baru</a>
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

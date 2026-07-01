@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+    <title>Moderasi Konten — Panel Super Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <link rel="stylesheet" href="styles/admin.css"/>
+    <link rel="stylesheet" href="styles/admin-shell.css"/>
+    <script src="js/database.js" defer></script>
+    <script src="js/admin-nav.js" defer></script>
+    <script src="js/moderation.js" defer></script>
+</head>
+<body class="admin-shell-body">
+
+<header class="admin-header">
+    <div class="admin-header-left">
+        <a href="index.html" class="admin-back-btn"><span class="material-symbols-outlined">home</span><span>Forum</span></a>
+        <div class="admin-header-divider"></div>
+        <div class="admin-header-brand">
+            <img src="assets/ut-logo.png" alt="UT" style="height:32px;"/>
+            <div><div class="admin-header-title">Panel Super Admin</div><div class="admin-header-sub">Forum Mahasiswa UT</div></div>
+        </div>
+    </div>
+    <div class="admin-header-right">
+        <span class="material-symbols-outlined" style="color:var(--color-secondary-container);font-variation-settings:'FILL' 1;">admin_panel_settings</span>
+        <span id="admin-name" class="admin-header-name">Super Admin</span>
+        <button class="admin-logout-btn" id="admin-logout-btn"><span class="material-symbols-outlined">logout</span>Keluar</button>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <aside class="admin-sidebar">
+        <div class="admin-nav-section">Utama</div>
+        <a href="dashboard.html" class="admin-nav-link"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+        <div class="admin-nav-section">Pengelolaan</div>
+        <a href="admin.html" class="admin-nav-link"><span class="material-symbols-outlined">manage_accounts</span>Manajemen User</a>
+        <a href="moderation.html" class="admin-nav-link active"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+        <a href="categories.html" class="admin-nav-link"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+        <div class="admin-nav-section">Laporan</div>
+        <a href="stats.html" class="admin-nav-link"><span class="material-symbols-outlined">bar_chart</span>Statistik</a>
+        <a href="activity-log.html" class="admin-nav-link"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+        <div class="admin-nav-divider"></div>
+        <a href="index.html" class="admin-nav-link nav-back"><span class="material-symbols-outlined">arrow_back</span>Kembali ke Forum</a>
+    </aside>
+
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div class="admin-page-title"><span class="material-symbols-outlined">shield</span>Moderasi Konten</div>
+            <div class="admin-page-subtitle">Kelola thread, komentar, dan laporan pengguna</div>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex;gap:4px;margin-bottom:20px;background:var(--color-surface-container-lowest);border:1px solid var(--color-outline-variant);border-radius:var(--radius-lg);padding:5px;width:fit-content;box-shadow:var(--shadow-sm);">
+            <button id="tab-threads" class="admin-tab active" onclick="switchModTab('threads')">
+                <span class="material-symbols-outlined" style="font-size:16px;">forum</span> Thread
+            </button>
+            <button id="tab-reports" class="admin-tab" onclick="switchModTab('reports')">
+                <span class="material-symbols-outlined" style="font-size:16px;">flag</span> Laporan
+                <span id="reports-badge" class="pill pill-red" style="margin-left:4px;font-size:10px;"></span>
+            </button>
+        </div>
+
+        <!-- Thread Tab -->
+        <div id="page-threads">
+            <!-- Filter bar -->
+            <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+                <div style="position:relative;">
+                    <span class="material-symbols-outlined" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--color-outline);">search</span>
+                    <input id="thread-search" type="text" placeholder="Cari thread..." oninput="filterThreads()" style="padding:8px 10px 8px 32px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);outline:none;width:220px;"/>
+                </div>
+                <select id="thread-filter-status" onchange="filterThreads()" style="padding:8px 10px;border:1px solid var(--color-outline-variant);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--color-surface-container-lowest);color:var(--color-on-surface);cursor:pointer;outline:none;">
+                    <option value="all">Semua Status</option>
+                    <option value="normal">Normal</option>
+                    <option value="pinned">Dipinned</option>
+                    <option value="locked">Dilocked</option>
+                    <option value="archived">Diarsip</option>
+                </select>
+                <span id="thread-count" style="font-size:12px;color:var(--color-on-surface-variant);margin-left:auto;"></span>
+            </div>
+            <div class="admin-card">
+                <div style="overflow-x:auto;">
+                    <table class="a-table">
+                        <thead><tr>
+                            <th>Thread</th><th>Penulis</th><th>Kategori</th>
+                            <th>Status</th><th>Likes</th><th>Komentar</th>
+                            <th style="text-align:center;">Aksi</th>
+                        </tr></thead>
+                        <tbody id="thread-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="thread-empty" style="display:none;" class="empty-state">
+                    <span class="material-symbols-outlined">forum</span><p>Tidak ada thread ditemukan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="page-reports" style="display:none;">
+            <div class="admin-card">
+                <div style="overflow-x:auto;">
+                    <table class="a-table">
+                        <thead><tr>
+                            <th>Thread Dilaporkan</th><th>Dilaporkan Oleh</th>
+                            <th>Alasan</th><th>Status</th><th>Waktu</th>
+                            <th style="text-align:center;">Aksi</th>
+                        </tr></thead>
+                        <tbody id="reports-table-body"></tbody>
+                    </table>
+                </div>
+                <div id="reports-empty" style="display:none;" class="empty-state">
+                    <span class="material-symbols-outlined">flag</span><p>Belum ada laporan masuk.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal: Delete Thread Confirm -->
+<div class="admin-modal-overlay" id="del-thread-modal">
+    <div class="admin-modal" style="max-width:420px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Hapus Thread</span>
+            <button class="admin-modal-close" onclick="document.getElementById('del-thread-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <p style="font-size:13px;color:var(--color-on-surface-variant);">Hapus thread "<strong id="del-thread-title"></strong>"? Semua komentar ikut terhapus dan <strong style="color:#dc2626;">tidak dapat dibatalkan.</strong></p>
+            <input type="hidden" id="del-thread-id"/>
+        </div>
+        <div class="admin-modal-footer">
+            <button class="btn-admin btn-secondary-admin" onclick="document.getElementById('del-thread-modal').classList.remove('show')">Batal</button>
+            <button class="btn-admin btn-danger-admin" onclick="confirmDeleteThread()"><span class="material-symbols-outlined" style="font-size:15px;">delete</span>Hapus Thread</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: View Comments -->
+<div class="admin-modal-overlay" id="comments-modal">
+    <div class="admin-modal" style="max-width:600px;">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Komentar: <span id="comments-thread-title" style="font-weight:400;"></span></span>
+            <button class="admin-modal-close" onclick="document.getElementById('comments-modal').classList.remove('show')"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="admin-modal-body">
+            <div id="comments-list-content"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
