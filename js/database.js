@@ -110,6 +110,7 @@ const REPORTS_KEY = "scholarforum_reports";
 const WARNINGS_KEY     = "scholarforum_warnings";
 const ACTIVITY_LOG_KEY = "scholarforum_activity_log";
 const CATEGORIES_KEY   = "scholarforum_categories";
+const NOTIFICATIONS_KEY = "scholarforum_notifications";
 
 const defaultCategories = [
     { id: "cat_1", name: "Akademik",          icon: "school",       color: "#002045", order: 1 },
@@ -185,6 +186,7 @@ function initDatabase() {
             if (!t.hasOwnProperty("locked"))   { t.locked   = false; _tMig = true; }
             if (!t.hasOwnProperty("pinned"))   { t.pinned   = false; _tMig = true; }
             if (!t.hasOwnProperty("archived")) { t.archived = false; _tMig = true; }
+            if (!t.hasOwnProperty("views"))    { t.views = Math.floor(Math.random() * 450) + 50; _tMig = true; }
         });
         if (_tMig) localStorage.setItem(THREADS_KEY, JSON.stringify(_threads));
         // Migrasi: tambah status field pada reports
@@ -195,6 +197,52 @@ function initDatabase() {
         });
         if (_rMig) localStorage.setItem(REPORTS_KEY, JSON.stringify(_reports));
     } catch(e) { /* silent */ }
+    
+    // Inisialisasi data notifikasi dummy awal jika belum ada
+    if (!localStorage.getItem(NOTIFICATIONS_KEY)) {
+        const dummyNotifications = [
+            {
+                id: "notif_dummy_1",
+                targetNim: "041234561", // Budi Santoso
+                senderNim: "041234562", // Siti Aminah
+                senderName: "Siti Aminah",
+                senderAvatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-",
+                actionType: "like",
+                threadId: "thread_1",
+                threadTitle: "Review Jujur Mata Kuliah Machine Learning Semester 5",
+                detailText: "",
+                isRead: false,
+                timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString() // 30 mnt lalu
+            },
+            {
+                id: "notif_dummy_2",
+                targetNim: "041234561", // Budi Santoso
+                senderNim: "041234563", // Ahmad Fauzi
+                senderName: "Ahmad Fauzi",
+                senderAvatar: "",
+                actionType: "comment",
+                threadId: "thread_1",
+                threadTitle: "Review Jujur Mata Kuliah Machine Learning Semester 5",
+                detailText: "Setuju banget Kak! Terutama bagian linear algebra-nya.",
+                isRead: false,
+                timestamp: new Date(Date.now() - 120 * 60 * 1000).toISOString() // 2 jam lalu
+            },
+            {
+                id: "notif_dummy_3",
+                targetNim: "041234561", // Budi Santoso
+                senderNim: "mod001", // Moderator Forum
+                senderName: "Moderator Forum",
+                senderAvatar: "",
+                actionType: "verify",
+                threadId: "",
+                threadTitle: "",
+                detailText: "Selamat! Profil Anda telah diverifikasi oleh Moderator.",
+                isRead: false,
+                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // 1 hari lalu
+            }
+        ];
+        localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(dummyNotifications));
+    }
 }
 
 // Mendapatkan semua pengguna
@@ -467,6 +515,21 @@ function verifyUser(nim, actorNim, actorName) {
     user.verified   = !user.verified;
     user.verifiedAt = user.verified ? new Date().toISOString() : null;
     saveUsers(users);
+    
+    // Kirim notifikasi jika diverifikasi
+    if (user.verified) {
+        addNotification(
+            nim,
+            actorNim,
+            actorName,
+            "",
+            "verify",
+            "",
+            "",
+            "Selamat! Profil Anda telah diverifikasi oleh Moderator."
+        );
+    }
+    
     const action = user.verified ? "verify_user" : "unverify_user";
     logActivity(action, actorNim, actorName, "user", nim, user.namaLengkap, "");
     return { success: true, verified: user.verified };
@@ -534,6 +597,71 @@ function closeReport(reportId, actorNim, actorName) {
     localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
     logActivity("close_report", actorNim, actorName, "report", reportId, r.threadTitle, r.reason);
     return true;
+}
+
+// ===== NOTIFIKASI (NOTIFICATIONS) =====
+function getNotifications(userNim) {
+    const data = localStorage.getItem(NOTIFICATIONS_KEY);
+    const allNotifs = data ? JSON.parse(data) : [];
+    return allNotifs.filter(n => n.targetNim === userNim);
+}
+
+function saveNotifications(notifications) {
+    localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
+}
+
+function addNotification(targetNim, senderNim, senderName, senderAvatar, actionType, threadId, threadTitle, detailText = "") {
+    // Jangan kirim notifikasi jika pengirim dan penerima adalah orang yang sama
+    if (targetNim === senderNim) return null;
+    
+    const allNotifs = localStorage.getItem(NOTIFICATIONS_KEY) ? JSON.parse(localStorage.getItem(NOTIFICATIONS_KEY)) : [];
+    const newNotif = {
+        id: "notif_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+        targetNim,
+        senderNim,
+        senderName,
+        senderAvatar,
+        actionType,
+        threadId,
+        threadTitle,
+        detailText,
+        isRead: false,
+        timestamp: new Date().toISOString()
+    };
+    allNotifs.unshift(newNotif);
+    // Batasi maksimum 500 notifikasi global untuk efisiensi local storage
+    saveNotifications(allNotifs.slice(0, 500));
+    return newNotif;
+}
+
+function markAllNotificationsAsRead(userNim) {
+    const data = localStorage.getItem(NOTIFICATIONS_KEY);
+    const allNotifs = data ? JSON.parse(data) : [];
+    allNotifs.forEach(n => {
+        if (n.targetNim === userNim) {
+            n.isRead = true;
+        }
+    });
+    saveNotifications(allNotifs);
+}
+
+function markNotificationAsRead(notifId) {
+    const data = localStorage.getItem(NOTIFICATIONS_KEY);
+    const allNotifs = data ? JSON.parse(data) : [];
+    const notif = allNotifs.find(n => n.id === notifId);
+    if (notif) {
+        notif.isRead = true;
+        saveNotifications(allNotifs);
+        return true;
+    }
+    return false;
+}
+
+function clearAllNotifications(userNim) {
+    const data = localStorage.getItem(NOTIFICATIONS_KEY);
+    let allNotifs = data ? JSON.parse(data) : [];
+    allNotifs = allNotifs.filter(n => n.targetNim !== userNim);
+    saveNotifications(allNotifs);
 }
 
 // Jalankan inisialisasi awal saat script dimuat

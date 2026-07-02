@@ -78,6 +78,90 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // ===== LOGIKA UPLOAD GAMBAR UTAS (COVER IMAGE) =====
+    const threadImageZone = document.getElementById("thread-image-zone");
+    const threadImageInput = document.getElementById("thread-image-input");
+    const uploadPlaceholder = document.getElementById("upload-placeholder");
+    const uploadPreview = document.getElementById("upload-preview");
+    const previewImg = document.getElementById("preview-img");
+    const btnRemovePreview = document.getElementById("btn-remove-preview");
+    
+    let threadImageBase64 = null;
+
+    if (threadImageZone && threadImageInput) {
+        // Klik zona unggah untuk membuka dialog file chooser
+        threadImageZone.addEventListener("click", function (e) {
+            // Jangan klik jika tombol remove diklik
+            if (e.target.closest("#btn-remove-preview")) return;
+            threadImageInput.click();
+        });
+
+        // Drag & Drop event listeners
+        threadImageZone.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            this.classList.add("dragover");
+        });
+
+        threadImageZone.addEventListener("dragleave", function () {
+            this.classList.remove("dragover");
+        });
+
+        threadImageZone.addEventListener("drop", function (e) {
+            e.preventDefault();
+            this.classList.remove("dragover");
+            const file = e.dataTransfer.files[0];
+            handleImageUpload(file);
+        });
+
+        // File input change listener
+        threadImageInput.addEventListener("change", function () {
+            const file = this.files[0];
+            handleImageUpload(file);
+        });
+    }
+
+    function handleImageUpload(file) {
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+            alert("Harap pilih berkas gambar!");
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Ukuran gambar maksimal adalah 2MB!");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            threadImageBase64 = e.target.result;
+            
+            // Tampilkan preview gambar
+            if (previewImg && uploadPreview && uploadPlaceholder) {
+                previewImg.src = threadImageBase64;
+                uploadPlaceholder.style.display = "none";
+                uploadPreview.style.display = "flex";
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Tombol Batal/Hapus Gambar pratinjau
+    if (btnRemovePreview) {
+        btnRemovePreview.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            threadImageBase64 = null;
+            if (threadImageInput) threadImageInput.value = "";
+            
+            if (uploadPlaceholder && uploadPreview && previewImg) {
+                previewImg.src = "";
+                uploadPreview.style.display = "none";
+                uploadPlaceholder.style.display = "flex";
+            }
+        });
+    }
+
     // 4. Submit Form logic
     if (form) {
         form.addEventListener("submit", function (e) {
@@ -124,7 +208,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 category: finalCategory,
                 likes: 0,
                 commentsCount: 0,
-                postTime: "Baru saja"
+                views: 0,
+                postTime: "Baru saja",
+                threadImage: threadImageBase64 // Simpan gambar cover jika ada
             };
 
             // Simpan ke database local storage

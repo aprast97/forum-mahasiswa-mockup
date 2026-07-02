@@ -1,3 +1,13 @@
+// Initialize theme immediately to prevent layout shifts / flashes
+(function () {
+    const savedTheme = localStorage.getItem("scholarforum_theme") || "light";
+    if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark-theme");
+    } else {
+        document.documentElement.classList.remove("dark-theme");
+    }
+})();
+
 // Global Authentication Logic for ScholarForum
 let currentFeedFilter = "all"; // Can be "all", "hot", "saved"
 
@@ -23,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (!isSelfValidatedPage) {
             // Perbarui UI dengan data pengguna yang sedang login
             updateUserProfileUI(user);
+            renderNotifications();
             
             // Muat utas secara dinamis jika di halaman utama
             if (pageName === "index.html" || pageName === "") {
@@ -43,16 +54,62 @@ document.addEventListener("DOMContentLoaded", function () {
     // Toggle Profile Dropdown Menu (Top-Right corner)
     const avatarBtn = document.getElementById("avatar-btn");
     const profileDropdown = document.getElementById("profile-dropdown");
+    
+    // Toggle Notification Dropdown Menu
+    const notificationBtn = document.getElementById("notification-btn");
+    const notificationDropdown = document.getElementById("notification-dropdown");
+
     if (avatarBtn && profileDropdown) {
         avatarBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             profileDropdown.classList.toggle("show");
+            if (notificationDropdown) notificationDropdown.classList.remove("show");
         });
+    }
 
-        // Close dropdown when clicking anywhere else
-        document.addEventListener("click", function (e) {
-            if (!profileDropdown.contains(e.target) && !avatarBtn.contains(e.target)) {
-                profileDropdown.classList.remove("show");
+    if (notificationBtn && notificationDropdown) {
+        notificationBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle("show");
+            if (profileDropdown) profileDropdown.classList.remove("show");
+        });
+    }
+
+    // Close dropdowns when clicking anywhere else
+    document.addEventListener("click", function (e) {
+        if (profileDropdown && !profileDropdown.contains(e.target) && avatarBtn && !avatarBtn.contains(e.target)) {
+            profileDropdown.classList.remove("show");
+        }
+        if (notificationDropdown && !notificationDropdown.contains(e.target) && notificationBtn && !notificationBtn.contains(e.target)) {
+            notificationDropdown.classList.remove("show");
+        }
+    });
+
+    // Bind event listeners for notification actions inside dropdown
+    const markAllReadBtn = document.getElementById("mark-all-read-btn");
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                markAllNotificationsAsRead(currentUser.nim);
+                renderNotifications();
+            }
+        });
+    }
+
+    const clearAllNotifsBtn = document.getElementById("clear-all-btn");
+    if (clearAllNotifsBtn) {
+        clearAllNotifsBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                if (confirm("Apakah Anda yakin ingin menghapus semua notifikasi?")) {
+                    clearAllNotifications(currentUser.nim);
+                    renderNotifications();
+                }
             }
         });
     }
@@ -74,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
             e.stopPropagation();
             if (window.innerWidth <= 768) {
                 sidebar.classList.toggle("show-mobile");
+                document.body.classList.toggle("sidebar-open");
             } else {
                 sidebar.classList.toggle("collapsed");
             }
@@ -83,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.addEventListener("click", function (e) {
             if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
                 sidebar.classList.remove("show-mobile");
+                document.body.classList.remove("sidebar-open");
             }
         });
     }
@@ -142,6 +201,109 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentUser) {
                 viewUserProfile(currentUser.nim);
             }
+        });
+    }
+
+    // ===== INITIALIZE LIGHT/DARK THEME TOGGLE & MOBILE SEARCH ICON =====
+    const headerActions = document.querySelector(".header-actions");
+    const rankWidget = document.querySelector(".rank-widget");
+
+    if (headerActions) {
+        // 1. Create Theme Toggle Switch
+        let toggleBtn = document.getElementById("theme-toggle-btn");
+        if (!toggleBtn) {
+            toggleBtn = document.createElement("button");
+            toggleBtn.id = "theme-toggle-btn";
+            toggleBtn.className = "theme-toggle-switch";
+            toggleBtn.setAttribute("aria-label", "Ubah Tema");
+            toggleBtn.innerHTML = `
+                <span class="theme-toggle-track-bg">
+                    <span class="material-symbols-outlined bg-cloud">cloud</span>
+                    <span class="bg-stars">
+                        <span class="bg-star">✦</span>
+                        <span class="bg-star-small">✦</span>
+                    </span>
+                </span>
+                <span class="theme-toggle-thumb">
+                    <span class="material-symbols-outlined theme-toggle-icon">light_mode</span>
+                </span>
+            `;
+        }
+
+        // Place toggleBtn: in sidebar if rankWidget exists, otherwise fallback to headerActions
+        if (rankWidget) {
+            let sidebarToggleContainer = document.getElementById("sidebar-theme-toggle-container");
+            if (!sidebarToggleContainer) {
+                sidebarToggleContainer = document.createElement("div");
+                sidebarToggleContainer.id = "sidebar-theme-toggle-container";
+                sidebarToggleContainer.className = "sidebar-theme-toggle-container";
+                sidebarToggleContainer.innerHTML = `
+                    <span class="toggle-label">Mode Gelap</span>
+                `;
+                rankWidget.parentNode.insertBefore(sidebarToggleContainer, rankWidget.nextSibling);
+            }
+            sidebarToggleContainer.appendChild(toggleBtn);
+        } else {
+            // Fallback for pages without sidebar (like create.html)
+            headerActions.insertBefore(toggleBtn, headerActions.firstChild);
+        }
+
+        // 2. Create Mobile Search Icon (Mirror) next to "Buat Utas"
+        let mobileSearchBtn = document.getElementById("mobile-search-btn");
+        if (!mobileSearchBtn) {
+            mobileSearchBtn = document.createElement("button");
+            mobileSearchBtn.id = "mobile-search-btn";
+            mobileSearchBtn.className = "mobile-search-btn";
+            mobileSearchBtn.setAttribute("aria-label", "Cari");
+            mobileSearchBtn.innerHTML = `<span class="material-symbols-outlined">search</span>`;
+            
+            const buatUtasBtn = headerActions.querySelector(".btn-buat-post");
+            if (buatUtasBtn) {
+                headerActions.insertBefore(mobileSearchBtn, buatUtasBtn);
+            } else {
+                headerActions.insertBefore(mobileSearchBtn, headerActions.firstChild);
+            }
+
+            mobileSearchBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                alert("Fitur Pencarian akan segera hadir!");
+            });
+        }
+        
+        // Function to update the button icon and state
+        const updateThemeToggleUI = () => {
+            const isDark = document.documentElement.classList.contains("dark-theme");
+            const iconSpan = toggleBtn.querySelector(".theme-toggle-icon");
+            const labelSpan = rankWidget ? document.querySelector("#sidebar-theme-toggle-container .toggle-label") : null;
+            if (iconSpan) {
+                if (isDark) {
+                    iconSpan.textContent = "dark_mode";
+                    if (labelSpan) labelSpan.textContent = "Mode Gelap";
+                } else {
+                    iconSpan.textContent = "light_mode";
+                    if (labelSpan) labelSpan.textContent = "Mode Terang";
+                }
+            }
+        };
+
+        // Initialize button UI state
+        updateThemeToggleUI();
+
+        // Toggle click handler
+        toggleBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const wasDark = document.documentElement.classList.contains("dark-theme");
+            if (wasDark) {
+                document.documentElement.classList.remove("dark-theme");
+                localStorage.setItem("scholarforum_theme", "light");
+            } else {
+                document.documentElement.classList.add("dark-theme");
+                localStorage.setItem("scholarforum_theme", "dark");
+            }
+            
+            updateThemeToggleUI();
         });
     }
 });
@@ -263,6 +425,7 @@ function renderFeedThreads() {
     threads.forEach(thread => {
         const article = document.createElement("article");
         article.className = "thread-card";
+        article.id = "thread-card-" + thread.id;
 
         let tagsHtml = "";
         if (thread.tags && thread.tags.length > 0) {
@@ -365,25 +528,37 @@ function renderFeedThreads() {
             <h3 class="thread-title">${thread.title}</h3>
             <div class="thread-preview thread-html-content">${thread.content}</div>
             
+            ${thread.threadImage ? `
+                <div class="thread-image-preview-container">
+                    <img src="${thread.threadImage}" alt="Gambar Pendukung" />
+                </div>
+            ` : ""}
+            
             ${tagsHtml}
             
             <div class="thread-actions">
-                <div class="action-group-likes">
-                    <button class="${likeBtnClass}" onclick="likeThread('${thread.id}', event)">
+                <div class="actions-left">
+                    <button class="${likeBtnClass}" onclick="likeThread('${thread.id}', event)" style="gap: 6px;">
                         <span class="material-symbols-outlined" style="${likeIconStyle}">thumb_up</span>
+                        <span class="like-count" id="likes-${thread.id}">${thread.likes}</span>
                     </button>
-                    <span class="like-count" id="likes-${thread.id}">${thread.likes}</span>
+                    <button class="action-btn" onclick="focusCommentInput('${thread.id}', event)" style="gap: 6px;">
+                        <span class="material-symbols-outlined">chat_bubble</span>
+                        <span>${thread.commentsCount || (thread.comments ? thread.comments.length : 0)}</span>
+                    </button>
                 </div>
-                <button class="action-btn" onclick="focusCommentInput('${thread.id}', event)" style="gap: 6px;">
-                    <span class="material-symbols-outlined">chat_bubble</span>
-                    <span>${thread.commentsCount || (thread.comments ? thread.comments.length : 0)}</span>
-                </button>
-                <button class="action-btn" onclick="saveThread('${thread.id}', event)" style="gap: 0;" title="Simpan Utas">
-                    <span class="material-symbols-outlined" style="${saveIconStyle}">bookmark</span>
-                </button>
-                <button class="action-btn" onclick="shareThread('${thread.id}', event)" style="gap: 0;" title="Bagikan">
-                    <span class="material-symbols-outlined">send</span>
-                </button>
+                <div class="actions-right">
+                    <div class="action-btn action-views" style="gap: 6px; cursor: default;">
+                        <span class="material-symbols-outlined">bar_chart</span>
+                        <span>${thread.views || 0}</span>
+                    </div>
+                    <button class="action-btn" onclick="saveThread('${thread.id}', event)" style="gap: 0;" title="Simpan Utas">
+                        <span class="material-symbols-outlined" style="${saveIconStyle}">bookmark</span>
+                    </button>
+                    <button class="action-btn" onclick="shareThread('${thread.id}', event)" style="gap: 0;" title="Bagikan">
+                        <span class="material-symbols-outlined">share</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Comments Section -->
@@ -404,6 +579,27 @@ function renderFeedThreads() {
         `;
         threadListContainer.appendChild(article);
     });
+
+    // Sorot & gulir ke utas jika parameter pencarian '?thread=id' ada di URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const focusThreadId = urlParams.get("thread");
+    if (focusThreadId) {
+        setTimeout(() => {
+            const card = document.getElementById("thread-card-" + focusThreadId);
+            if (card) {
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+                card.style.transition = "background-color 0.8s ease, transform 0.3s ease";
+                card.style.backgroundColor = "var(--color-surface-container-highest)";
+                card.style.borderLeft = "4px solid var(--color-primary)";
+                setTimeout(() => {
+                    card.style.backgroundColor = "";
+                    card.style.borderLeft = "";
+                }, 2500);
+                // Bersihkan URL query parameter agar saat di-refresh tidak berulang
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }, 400);
+    }
 }
 
 // Global likes handlers
@@ -436,6 +632,26 @@ window.likeThread = function (threadId, event) {
             
             // Tampilkan popup notifikasi kecil
             showLikeToast("Anda menyukai utas ini.");
+            
+            // Kirim notifikasi ke pembuat utas
+            let authorNim = thread.authorNim;
+            if (!authorNim && thread.authorName) {
+                const users = getUsers();
+                const matchedUser = users.find(u => u.namaLengkap === thread.authorName || u.namaLengkap.replace(/\s+/g, "").toLowerCase() === thread.authorName.replace(/[\s_0-9]+/g, "").toLowerCase());
+                if (matchedUser) authorNim = matchedUser.nim;
+            }
+            if (authorNim && authorNim !== userNim) {
+                addNotification(
+                    authorNim,
+                    userNim,
+                    currentUser.namaLengkap,
+                    currentUser.avatarUrl || "",
+                    "like",
+                    thread.id,
+                    thread.title,
+                    ""
+                );
+            }
         }
         
         saveThreads(threads);
@@ -603,6 +819,26 @@ window.submitComment = function (threadId, event) {
         
         saveThreads(threads);
         
+        // Kirim notifikasi ke pembuat utas
+        let authorNim = thread.authorNim;
+        if (!authorNim && thread.authorName) {
+            const users = getUsers();
+            const matchedUser = users.find(u => u.namaLengkap === thread.authorName || u.namaLengkap.replace(/\s+/g, "").toLowerCase() === thread.authorName.replace(/[\s_0-9]+/g, "").toLowerCase());
+            if (matchedUser) authorNim = matchedUser.nim;
+        }
+        if (authorNim && authorNim !== currentUser.nim) {
+            addNotification(
+                authorNim,
+                currentUser.nim,
+                currentUser.namaLengkap,
+                currentUser.avatarUrl || "",
+                "comment",
+                thread.id,
+                thread.title,
+                text
+            );
+        }
+        
         // Clear input
         input.value = "";
         
@@ -652,16 +888,173 @@ document.addEventListener("click", function () {
     });
 });
 
+// ===== FITUR HAPUS UTAS DENGAN UNDO =====
+let recentlyDeletedThread = null;
+let recentlyDeletedIndex = -1;
+let deleteThreadTimeout = null;
+let deleteCountdownInterval = null;
+
 window.deleteThread = function (threadId, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (confirm("Apakah Anda yakin ingin menghapus utas ini?")) {
-        const threads = getThreads();
-        const filtered = threads.filter(t => t.id !== threadId);
-        saveThreads(filtered);
-        renderFeedThreads();
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
     }
+    
+    // Jika ada penghapusan yang tertunda sebelumnya, jalankan secara permanen terlebih dahulu
+    if (deleteThreadTimeout) {
+        clearTimeout(deleteThreadTimeout);
+        if (deleteCountdownInterval) clearInterval(deleteCountdownInterval);
+        executeDeleteThreadPermanently();
+    }
+    
+    const threads = getThreads();
+    const index = threads.findIndex(t => t.id === threadId);
+    if (index === -1) return;
+    
+    // Berikan efek transisi menghapus pada DOM
+    const card = document.getElementById("thread-card-" + threadId);
+    if (card) {
+        card.classList.add("deleting");
+    }
+    
+    // Tunggu animasi transisi CSS fade-out (400ms)
+    setTimeout(() => {
+        recentlyDeletedThread = threads[index];
+        recentlyDeletedIndex = index;
+        
+        // Hapus sementara dari list LocalStorage
+        threads.splice(index, 1);
+        saveThreads(threads);
+        
+        // Render ulang tampilan utama / profil
+        renderFeedThreads();
+        
+        // Tampilkan Toast dengan opsi Batal (Undo)
+        showUndoToast(threadId);
+    }, 400);
 };
+
+function showUndoToast(threadId) {
+    // Hapus toast jika sudah ada sebelumnya
+    let existingToast = document.getElementById("undo-toast");
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement("div");
+    toast.id = "undo-toast";
+    toast.className = "undo-toast-container";
+    
+    let timeLeft = 5;
+    toast.innerHTML = `
+        <div class="undo-toast-content">
+            <span class="material-symbols-outlined" style="color:var(--color-secondary-container); font-variation-settings:'FILL' 1;">delete</span>
+            <span>Utas dihapus. <strong>(${timeLeft}s)</strong></span>
+        </div>
+        <button class="undo-btn" id="btn-undo-delete">Batal</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Pemicu animasi CSS transition masuk
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 50);
+    
+    // Tombol Batal diklik
+    const undoBtn = document.getElementById("btn-undo-delete");
+    if (undoBtn) {
+        undoBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            undoDeleteThread();
+        });
+    }
+    
+    // Update countdown setiap detik
+    deleteCountdownInterval = setInterval(() => {
+        timeLeft -= 1;
+        const textSpan = toast.querySelector(".undo-toast-content span strong");
+        if (textSpan) {
+            textSpan.textContent = `(${timeLeft}s)`;
+        }
+        if (timeLeft <= 0) {
+            clearInterval(deleteCountdownInterval);
+        }
+    }, 1000);
+    
+    // Hapus permanen setelah 5 detik
+    deleteThreadTimeout = setTimeout(() => {
+        executeDeleteThreadPermanently();
+    }, 5000);
+}
+
+function undoDeleteThread() {
+    if (deleteThreadTimeout) {
+        clearTimeout(deleteThreadTimeout);
+        deleteThreadTimeout = null;
+    }
+    if (deleteCountdownInterval) {
+        clearInterval(deleteCountdownInterval);
+        deleteCountdownInterval = null;
+    }
+    
+    if (recentlyDeletedThread && recentlyDeletedIndex !== -1) {
+        const threads = getThreads();
+        // Kembalikan ke posisi indeks aslinya
+        threads.splice(recentlyDeletedIndex, 0, recentlyDeletedThread);
+        saveThreads(threads);
+        
+        recentlyDeletedThread = null;
+        recentlyDeletedIndex = -1;
+        
+        renderFeedThreads();
+        
+        // Hapus elemen toast dengan efek keluar
+        const toast = document.getElementById("undo-toast");
+        if (toast) {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 400);
+        }
+        
+        showToast("Penghapusan utas dibatalkan.", "info");
+    }
+}
+
+function executeDeleteThreadPermanently() {
+    if (deleteThreadTimeout) {
+        clearTimeout(deleteThreadTimeout);
+        deleteThreadTimeout = null;
+    }
+    if (deleteCountdownInterval) {
+        clearInterval(deleteCountdownInterval);
+        deleteCountdownInterval = null;
+    }
+    
+    if (recentlyDeletedThread) {
+        const currentUser = getCurrentUser();
+        const actorNim = currentUser ? currentUser.nim : "unknown";
+        const actorName = currentUser ? currentUser.namaLengkap : "unknown";
+        
+        // Log aktivitas permanen
+        logActivity(
+            "delete_thread", 
+            actorNim, 
+            actorName, 
+            "thread", 
+            recentlyDeletedThread.id, 
+            recentlyDeletedThread.title, 
+            "Dihapus permanen oleh pemilik/admin"
+        );
+        
+        recentlyDeletedThread = null;
+        recentlyDeletedIndex = -1;
+    }
+    
+    const toast = document.getElementById("undo-toast");
+    if (toast) {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 400);
+    }
+}
 
 window.editThread = function (threadId, event) {
     event.preventDefault();
@@ -758,6 +1151,26 @@ window.submitWarning = function () {
         issuedBy: currentUser ? currentUser.namaLengkap : "Moderator",
         reason
     });
+
+    // Kirim notifikasi ke pembuat utas (targetUser)
+    let targetNim = thread ? thread.authorNim : null;
+    if (!targetNim && targetUser) {
+        const users = getUsers();
+        const matchedUser = users.find(u => u.namaLengkap === targetUser || u.namaLengkap.replace(/\s+/g, "").toLowerCase() === targetUser.replace(/[\s_0-9]+/g, "").toLowerCase());
+        if (matchedUser) targetNim = matchedUser.nim;
+    }
+    if (targetNim) {
+        addNotification(
+            targetNim,
+            currentUser ? currentUser.nim : "mod001",
+            currentUser ? currentUser.namaLengkap : "Moderator Forum",
+            currentUser ? currentUser.avatarUrl || "" : "",
+            "warning",
+            threadId,
+            thread ? thread.title : threadId,
+            reason
+        );
+    }
 
     closeWarnModal();
     // Tampilkan konfirmasi di pojok layar
@@ -859,3 +1272,132 @@ function escapeHtml(str) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+// ===== INTEGRASI NOTIFIKASI UI & RENDERING =====
+window.renderNotifications = function() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+
+    const notifications = getNotifications(currentUser.nim);
+    const badge = document.getElementById("notification-badge");
+    const listContainer = document.getElementById("notification-list");
+
+    if (!listContainer) return;
+
+    // Hitung jumlah notifikasi belum dibaca untuk memperbarui lencana (badge)
+    const unreadCount = notifications.filter(n => !n.isRead).length;
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.style.display = "flex";
+        } else {
+            badge.style.display = "none";
+        }
+    }
+
+    // Render list notifikasi
+    if (notifications.length === 0) {
+        listContainer.innerHTML = `
+            <div class="no-notifications">
+                <span class="material-symbols-outlined">notifications_off</span>
+                <p>Tidak ada notifikasi baru</p>
+            </div>
+        `;
+        return;
+    }
+
+    listContainer.innerHTML = notifications.map(n => {
+        const unreadClass = n.isRead ? "" : "unread";
+        let icon = "notifications";
+        let contentHtml = "";
+        
+        const safeSenderName = escapeHtml(n.senderName);
+        const safeThreadTitle = escapeHtml(n.threadTitle);
+        const safeDetailText = escapeHtml(n.detailText);
+
+        if (n.actionType === "like") {
+            icon = "thumb_up";
+            contentHtml = `<strong>${safeSenderName}</strong> menyukai utas Anda: "<em>${safeThreadTitle}</em>"`;
+        } else if (n.actionType === "comment") {
+            icon = "chat_bubble";
+            contentHtml = `<strong>${safeSenderName}</strong> mengomentari utas Anda: "<em>${safeThreadTitle}</em>" <span style="display:block; font-size:12px; color:var(--color-on-surface-variant); font-style:italic; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">"${safeDetailText}"</span>`;
+        } else if (n.actionType === "verify") {
+            icon = "verified";
+            contentHtml = `Profil Anda telah <strong>diverifikasi</strong> oleh Moderator Forum.`;
+        } else if (n.actionType === "warning") {
+            icon = "warning";
+            contentHtml = `<strong style="color:var(--color-error)">Peringatan!</strong> Anda menerima peringatan: "<em>${safeDetailText}</em>" di utas "${safeThreadTitle}"`;
+        } else {
+            contentHtml = `${n.detailText || ('Notifikasi dari ' + safeSenderName)}`;
+        }
+
+        const avatarHtml = n.senderAvatar 
+            ? `<div class="notification-item-avatar"><img src="${n.senderAvatar}" alt="Avatar" /></div>`
+            : `<div class="notification-item-avatar-icon"><span class="material-symbols-outlined">${icon}</span></div>`;
+
+        return `
+            <div class="notification-item ${unreadClass}" onclick="window.handleNotificationClick('${n.id}', '${n.threadId}')">
+                ${avatarHtml}
+                <div class="notification-item-content">
+                    <span class="notification-item-text">${contentHtml}</span>
+                    <span class="notification-item-time">${formatRelativeTime(n.timestamp)}</span>
+                </div>
+            </div>
+        `;
+    }).join("");
+};
+
+window.handleNotificationClick = function(id, threadId) {
+    markNotificationAsRead(id);
+    renderNotifications();
+    
+    // Tutup dropdown notifikasi setelah diklik
+    const notificationDropdown = document.getElementById("notification-dropdown");
+    if (notificationDropdown) {
+        notificationDropdown.classList.remove("show");
+    }
+
+    if (threadId) {
+        // Cek halaman saat ini
+        const pageName = window.location.pathname.split("/").pop();
+        if (pageName === "index.html" || pageName === "") {
+            const card = document.getElementById("thread-card-" + threadId);
+            if (card) {
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+                card.style.transition = "background-color 0.8s ease, transform 0.3s ease";
+                card.style.backgroundColor = "var(--color-surface-container-highest)";
+                card.style.borderLeft = "4px solid var(--color-primary)";
+                setTimeout(() => {
+                    card.style.backgroundColor = "";
+                    card.style.borderLeft = "";
+                }, 2500);
+            } else {
+                window.location.href = "index.html?thread=" + threadId;
+            }
+        } else {
+            window.location.href = "index.html?thread=" + threadId;
+        }
+    }
+};
+
+function formatRelativeTime(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+
+    if (diffSec < 60) {
+        return "Baru saja";
+    } else if (diffMin < 60) {
+        return `${diffMin} menit yang lalu`;
+    } else if (diffHour < 24) {
+        return `${diffHour} jam yang lalu`;
+    } else {
+        return `${diffDay} hari yang lalu`;
+    }
+}
+
+

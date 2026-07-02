@@ -153,14 +153,14 @@ function renderProfileHeaderCard() {
     if (actionContainer) {
         if (isOwner) {
             actionContainer.innerHTML = `
-                <button class="btn btn-secondary" onclick="alert('Fitur Pengaturan Akun akan segera hadir!')" style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none;">
+                <a class="btn btn-secondary" href="settings.html" style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                     <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 6px;">settings</span>
                     Pengaturan
-                </button>
-                <button class="btn btn-primary" onclick="alert('Fitur Edit Profil akan segera hadir!')">
+                </a>
+                <a class="btn btn-primary" href="settings.html" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">
                     <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 6px;">edit</span>
                     Edit Profil
-                </button>
+                </a>
             `;
         } else {
             actionContainer.innerHTML = `
@@ -230,6 +230,7 @@ function renderThreadCardsToContainer(threadsList, container) {
     threadsList.forEach(thread => {
         const article = document.createElement("article");
         article.className = "thread-card";
+        article.id = "thread-card-" + thread.id;
         
         let tagsHtml = "";
         if (thread.tags && thread.tags.length > 0) {
@@ -306,25 +307,37 @@ function renderThreadCardsToContainer(threadsList, container) {
             <h3 class="thread-title">${thread.title}</h3>
             <div class="thread-preview thread-html-content">${thread.content}</div>
             
+            ${thread.threadImage ? `
+                <div class="thread-image-preview-container">
+                    <img src="${thread.threadImage}" alt="Gambar Pendukung" />
+                </div>
+            ` : ""}
+            
             ${tagsHtml}
             
             <div class="thread-actions">
-                <div class="action-group-likes">
-                    <button class="${likeBtnClass}" onclick="likeThread('${thread.id}', event)">
+                <div class="actions-left">
+                    <button class="${likeBtnClass}" onclick="likeThread('${thread.id}', event)" style="gap: 6px;">
                         <span class="material-symbols-outlined" style="${likeIconStyle}">thumb_up</span>
+                        <span class="like-count" id="likes-${thread.id}">${thread.likes}</span>
                     </button>
-                    <span class="like-count" id="likes-${thread.id}">${thread.likes}</span>
+                    <button class="action-btn" onclick="focusCommentInput('${thread.id}', event)" style="gap: 6px;">
+                        <span class="material-symbols-outlined">chat_bubble</span>
+                        <span>${thread.commentsCount || (thread.comments ? thread.comments.length : 0)}</span>
+                    </button>
                 </div>
-                <button class="action-btn" onclick="focusCommentInput('${thread.id}', event)" style="gap: 6px;">
-                    <span class="material-symbols-outlined">chat_bubble</span>
-                    <span>${thread.commentsCount || (thread.comments ? thread.comments.length : 0)}</span>
-                </button>
-                <button class="action-btn" onclick="saveThread('${thread.id}', event)" style="gap: 0;" title="Simpan Utas">
-                    <span class="material-symbols-outlined" style="${saveIconStyle}">bookmark</span>
-                </button>
-                <button class="action-btn" onclick="shareThread('${thread.id}', event)" style="gap: 0;" title="Bagikan">
-                    <span class="material-symbols-outlined">send</span>
-                </button>
+                <div class="actions-right">
+                    <div class="action-btn action-views" style="gap: 6px; cursor: default;">
+                        <span class="material-symbols-outlined">bar_chart</span>
+                        <span>${thread.views || 0}</span>
+                    </div>
+                    <button class="action-btn" onclick="saveThread('${thread.id}', event)" style="gap: 0;" title="Simpan Utas">
+                        <span class="material-symbols-outlined" style="${saveIconStyle}">bookmark</span>
+                    </button>
+                    <button class="action-btn" onclick="shareThread('${thread.id}', event)" style="gap: 0;" title="Bagikan">
+                        <span class="material-symbols-outlined">share</span>
+                    </button>
+                </div>
             </div>
             
             <!-- Comments Section -->
