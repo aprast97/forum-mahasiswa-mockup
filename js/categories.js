@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     catAdmin = initAdminPage();
     if (!catAdmin) return;
     renderCategories();
+    initIconPicker();
+    initColorPicker();
 });
 
 function renderCategories() {
@@ -132,4 +134,50 @@ function previewIcon() {
     const val = document.getElementById("new-cat-icon").value.trim();
     const prev = document.getElementById("icon-preview");
     if (prev) prev.textContent = val || "category";
+}
+
+// ── Icon Picker suggestions ───────────────────────────────────
+function initIconPicker() {
+    const icons = ["school","assignment","groups","work","description","campaign",
+                   "storefront","chat","star","local_library","sports_esports",
+                   "art_track","science","calculate","code","music_note"];
+    const container = document.getElementById("icon-suggestions");
+    if (!container) return;
+    const label = document.createElement("span");
+    label.style.cssText = "font-size:11px;color:var(--color-on-surface-variant);align-self:center;";
+    label.textContent = "Saran:";
+    container.appendChild(label);
+    icons.forEach(function(ic) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.title = ic;
+        btn.style.cssText = "background:none;border:none;cursor:pointer;padding:2px;";
+        btn.onclick = function() {
+            document.getElementById("new-cat-icon").value = ic;
+            previewIcon();
+        };
+        const span = document.createElement("span");
+        span.className = "material-symbols-outlined";
+        span.style.cssText = "font-size:18px;color:var(--color-on-surface-variant);";
+        span.textContent = ic;
+        btn.appendChild(span);
+        container.appendChild(btn);
+    });
+}
+
+// ── Color Swatches ────────────────────────────────────────────
+function initColorPicker() {
+    const colors = ["#002045","#7c3aed","#059669","#0891b2","#dc2626","#d97706","#6b7280","#db2777"];
+    const container = document.getElementById("color-swatches");
+    if (!container) return;
+    colors.forEach(function(c) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.title = c;
+        btn.style.cssText = "width:24px;height:24px;border-radius:50%;background:" + c + ";border:2px solid transparent;cursor:pointer;";
+        btn.onclick = function() {
+            document.getElementById("new-cat-color").value = c;
+        };
+        container.appendChild(btn);
+    });
 }

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tentang Kami — Forum Mahasiswa UT</title>
+    <meta name="description" content="Kenali Forum Mahasiswa Universitas Terbuka lebih dekat. Platform diskusi digital untuk mahasiswa UT seluruh Indonesia." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <script src="js/database.js" defer></script>
+    <script src="js/auth.js" defer></script>
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, #002045 0%, #7c3aed 100%);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            margin-bottom: 28px;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.07) 0%, transparent 60%),
+                        radial-gradient(circle at 20% 80%, rgba(124,58,237,0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .about-hero-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.15);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .about-hero h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .about-hero p {
+            font-size: 14px;
+            opacity: 0.85;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        .about-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        @media (max-width: 600px) { .about-stats-row { grid-template-columns: 1fr; } }
+        .about-stat-card {
+            background: var(--color-surface-container-lowest);
+            border: 1px solid var(--color-outline-variant);
+            border-radius: var(--radius-xl);
+            padding: 22px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .about-stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .about-stat-card .stat-num {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+        .about-stat-card .stat-label {
+            font-size: 12px;
+            color: var(--color-on-surface-variant);
+            font-weight: 500;
+        }
+        .about-section {
+            background: var(--color-surface-container-lowest);
+            border: 1px solid var(--color-outline-variant);
+            border-radius: var(--radius-xl);
+            padding: 28px 32px;
+            margin-bottom: 20px;
+        }
+        .about-section h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-on-surface);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .about-section p {
+            font-size: 14px;
+            color: var(--color-on-surface-variant);
+            line-height: 1.75;
+            margin-bottom: 12px;
+        }
+        .about-section p:last-child { margin-bottom: 0; }
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 650px) { .vision-mission-grid { grid-template-columns: 1fr; } }
+        .vm-card {
+            border-radius: var(--radius-xl);
+            padding: 24px 22px;
+            border: 1px solid;
+        }
+        .vm-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .vm-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .vm-card ul li {
+            font-size: 13px;
+            line-height: 1.6;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .vm-card ul li::before {
+            content: '✦';
+            font-size: 10px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        @media (max-width: 700px) { .values-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 450px) { .values-grid { grid-template-columns: 1fr; } }
+        .value-card {
+            background: var(--color-surface-container-lowest);
+            border: 1px solid var(--color-outline-variant);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .value-card:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+        .value-card .val-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .value-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-on-surface);
+            margin-bottom: 4px;
+        }
+        .value-card p {
+            font-size: 11px;
+            color: var(--color-on-surface-variant);
+            line-height: 1.5;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        @media (max-width: 700px) { .team-grid { grid-template-columns: 1fr 1fr; } }
+        .team-card {
+            background: var(--color-surface-container-lowest);
+            border: 1px solid var(--color-outline-variant);
+            border-radius: var(--radius-xl);
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .team-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .team-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .team-card h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-on-surface);
+            margin-bottom: 2px;
+        }
+        .team-card .team-role {
+            font-size: 11px;
+            color: var(--color-on-surface-variant);
+        }
+        .about-cta {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%);
+            border-radius: var(--radius-xl);
+            padding: 28px 32px;
+            text-align: center;
+            color: #fff;
+            margin-top: 20px;
+        }
+        .about-cta h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .about-cta p {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 18px;
+        }
+        .cta-btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .cta-btn-primary {
+            background: #fff;
+            color: var(--color-primary);
+        }
+        .cta-btn-primary:hover { background: #f0f3ff; }
+        .cta-btn-secondary {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .cta-btn-secondary:hover { background: rgba(255,255,255,0.25); }
+    </style>
+</head>
+<body>
+    <!-- TopNavBar -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="header-left">
+                <button class="hamburger-menu-btn">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a class="brand-logo" href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:8px;">
+                    <img src="assets/ut-logo.png" alt="Logo Universitas Terbuka" style="height:36px;width:auto;" />
+                    <span class="logo-title-3lines">
+                        <span>FORUM</span>
+                        <span>MAHASISWA</span>
+                        <span>Universitas Terbuka</span>
+                    </span>
+                </a>
+            </div>
+            <div class="header-search">
+                <input class="search-input" placeholder="Cari di sini" type="text" />
+            </div>
+            <div class="header-actions">
+                <a href="create.html" class="btn-buat-post">
+                    <span class="material-symbols-outlined">edit</span>
+                    Buat Utas
+                </a>
+                <div class="notification-dropdown-wrapper">
+                    <button class="notification-btn" id="notification-btn" aria-label="Notifikasi">
+                        <span class="material-symbols-outlined">notifications</span>
+                        <span class="notification-badge" id="notification-badge" style="display:none;">0</span>
+                    </button>
+                    <div class="dropdown-menu notification-menu" id="notification-dropdown">
+                        <div class="dropdown-header notification-header">
+                            <span class="dropdown-title">Notifikasi</span>
+                            <button class="mark-all-read-btn" id="mark-all-read-btn">Tandai semua dibaca</button>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="notification-list" id="notification-list"></div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-footer notification-footer">
+                            <button class="clear-all-btn" id="clear-all-btn">Hapus semua</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-dropdown-wrapper">
+                    <div class="avatar-container" id="avatar-btn">
+                        <img alt="User Profile Avatar" id="dropdown-avatar-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-" />
+                    </div>
+                    <div class="dropdown-menu" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <span class="dropdown-user-name" id="dropdown-user-name">Nama Mahasiswa</span>
+                            <span class="dropdown-user-nim" id="dropdown-user-nim">NIM: 041234567</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" id="dropdown-profile-btn">
+                            <span class="material-symbols-outlined">person</span>
+                            Profil Saya
+                        </a>
+                        <a href="settings.html" class="dropdown-item">
+                            <span class="material-symbols-outlined">settings</span>
+                            Pengaturan Akun
+                        </a>
+                        <button class="dropdown-item text-error" id="btn-dropdown-logout">
+                            <span class="material-symbols-outlined">logout</span>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container flex-row-layout">
+        <!-- SideNavBar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">S</div>
+                <div class="logo-info">
+                    <h2>Forum Mahasiswa</h2>
+                    <p>Modern Scholar</p>
+                </div>
+            </div>
+            <div class="rank-widget">
+                <p class="rank-widget-label">Status Kamu</p>
+                <div class="rank-widget-value">
+                    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">workspace_premium</span>
+                    <span>Mahasiswa Berprestasi</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width:75%"></div>
+                </div>
+                <p class="rank-widget-footer">150 / 200 rep</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-link" href="index.html">
+                    <span class="material-symbols-outlined">home</span>
+                    Beranda
+                </a>
+                <a class="sidebar-link" href="index.html#hot">
+                    <span class="material-symbols-outlined text-error">local_fire_department</span>
+                    Hot Threads
+                </a>
+                <a class="sidebar-link" href="#">
+                    <span class="material-symbols-outlined">category</span>
+                    Kategori
+                </a>
+                <a class="sidebar-link" href="#" id="sidebar-saved-link">
+                    <span class="material-symbols-outlined">bookmark</span>
+                    Disimpan
+                </a>
+                <a class="sidebar-link" href="#">
+                    <span class="material-symbols-outlined">military_tech</span>
+                    Peringkat
+                </a>
+                <div id="sidebar-admin-section" style="display:none;margin-top:8px;">
+                    <div style="font-size:10px;font-weight:700;color:var(--color-outline);text-transform:uppercase;letter-spacing:0.8px;padding:8px 12px 4px;">Admin Panel</div>
+                    <a class="sidebar-link" href="dashboard.html"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">dashboard</span>Dashboard</a>
+                    <a class="sidebar-link" href="admin.html" id="sidebar-admin-link"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">manage_accounts</span>Manajemen User</a>
+                    <a class="sidebar-link" href="moderation.html"><span class="material-symbols-outlined">shield</span>Moderasi Konten</a>
+                    <a class="sidebar-link" href="categories.html"><span class="material-symbols-outlined">category</span>Manajemen Kategori</a>
+                    <a class="sidebar-link" href="stats.html" id="sidebar-stats-link"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">bar_chart</span>Statistik</a>
+                    <a class="sidebar-link" href="activity-log.html"><span class="material-symbols-outlined">history</span>Log Aktivitas</a>
+                </div>
+                <div style="height:1px;background:var(--color-outline-variant);margin:8px 0;"></div>
+                <a class="sidebar-link" href="rules.html">
+                    <span class="material-symbols-outlined">gavel</span>
+                    Aturan Forum
+                </a>
+                <a class="sidebar-link" href="help.html">
+                    <span class="material-symbols-outlined">help</span>
+                    Pusat Bantuan
+                </a>
+                <a class="sidebar-link active" href="about.html">
+                    <span class="material-symbols-outlined">info</span>
+                    Tentang Kami
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-feed">
+            <!-- Hero -->
+            <div class="about-hero">
+                <div class="about-hero-logo">
+                    <span class="material-symbols-outlined" style="font-size:40px;color:#fff;font-variation-settings:'FILL' 1;">school</span>
+                </div>
+                <h1>Forum Mahasiswa<br>Universitas Terbuka</h1>
+                <p>Platform diskusi digital yang menghubungkan mahasiswa UT dari seluruh penjuru Indonesia. Satu ruang, satu komunitas, satu semangat belajar.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="about-stats-row">
+                <div class="about-stat-card">
+                    <div class="stat-num" style="background:linear-gradient(135deg,#002045,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">50K+</div>
+                    <div class="stat-label">Mahasiswa Terdaftar</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="stat-num" style="background:linear-gradient(135deg,#059669,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">120K+</div>
+                    <div class="stat-label">Thread Aktif</div>
+                </div>
+                <div class="about-stat-card">
+                    <div class="stat-num" style="background:linear-gradient(135deg,#d97706,#dc2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">34</div>
+                    <div class="stat-label">UPBJJ Terkoneksi</div>
+                </div>
+            </div>
+
+            <!-- Tentang Kami -->
+            <div class="about-section">
+                <h2>
+                    <span class="material-symbols-outlined" style="color:var(--color-primary);font-variation-settings:'FILL' 1;">info</span>
+                    Tentang Platform
+                </h2>
+                <p>
+                    Forum Mahasiswa UT adalah platform diskusi daring yang dirancang khusus untuk mendukung ekosistem belajar mahasiswa Universitas Terbuka. Hadir sebagai ruang virtual yang inklusif, platform ini memungkinkan mahasiswa dari seluruh Indonesia untuk saling berbagi pengetahuan, pengalaman akademis, dan informasi penting seputar kehidupan kampus.
+                </p>
+                <p>
+                    Dibangun di atas fondasi teknologi modern, Forum Mahasiswa UT menghadirkan pengalaman diskusi yang intuitif dan menyenangkan. Dari berbagi tips belajar, review mata kuliah, berita beasiswa, hingga diskusi akademik lintas jurusan — semua bisa dilakukan di satu tempat.
+                </p>
+                <p>
+                    Kami percaya bahwa kolaborasi antar mahasiswa adalah kunci keberhasilan belajar mandiri di era digital. Forum ini adalah wujud nyata dari semangat gotong royong akademik mahasiswa UT.
+                </p>
+            </div>
+
+            <!-- Visi & Misi -->
+            <div class="vision-mission-grid">
+                <div class="vm-card" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;">
+                    <h3>
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">visibility</span>
+                        Visi
+                    </h3>
+                    <ul style="color:#1e3a5f;">
+                        <li>Menjadi forum akademik digital terdepan bagi mahasiswa Indonesia</li>
+                        <li>Menghubungkan seluruh mahasiswa UT dalam satu komunitas yang inklusif</li>
+                        <li>Mendukung transformasi digital pendidikan tinggi jarak jauh</li>
+                    </ul>
+                </div>
+                <div class="vm-card" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;">
+                    <h3>
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">flag</span>
+                        Misi
+                    </h3>
+                    <ul style="color:#14532d;">
+                        <li>Menyediakan platform diskusi yang aman, nyaman, dan berkualitas</li>
+                        <li>Mendorong pertukaran pengetahuan dan pengalaman antar mahasiswa</li>
+                        <li>Membangun ekosistem belajar kolaboratif yang berkelanjutan</li>
+                        <li>Memastikan aksesibilitas platform untuk seluruh mahasiswa UT</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Nilai-nilai -->
+            <div class="about-section">
+                <h2>
+                    <span class="material-symbols-outlined" style="color:#7c3aed;font-variation-settings:'FILL' 1;">star</span>
+                    Nilai-nilai Kami
+                </h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#dbeafe;">
+                            <span class="material-symbols-outlined" style="color:#1d4ed8;font-variation-settings:'FILL' 1;">handshake</span>
+                        </div>
+                        <h4>Kolaboratif</h4>
+                        <p>Mendorong kerja sama dan berbagi pengetahuan antar sesama mahasiswa</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#dcfce7;">
+                            <span class="material-symbols-outlined" style="color:#15803d;font-variation-settings:'FILL' 1;">verified</span>
+                        </div>
+                        <h4>Integritas</h4>
+                        <p>Menjunjung tinggi kejujuran dan etika akademik dalam setiap diskusi</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#fef3c7;">
+                            <span class="material-symbols-outlined" style="color:#b45309;font-variation-settings:'FILL' 1;">diversity_3</span>
+                        </div>
+                        <h4>Inklusif</h4>
+                        <p>Terbuka untuk semua mahasiswa tanpa diskriminasi apapun</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#f3e8ff;">
+                            <span class="material-symbols-outlined" style="color:#7c3aed;font-variation-settings:'FILL' 1;">auto_awesome</span>
+                        </div>
+                        <h4>Inovatif</h4>
+                        <p>Terus berkembang menghadirkan fitur terbaik untuk pengalaman belajar</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#fee2e2;">
+                            <span class="material-symbols-outlined" style="color:#dc2626;font-variation-settings:'FILL' 1;">security</span>
+                        </div>
+                        <h4>Aman & Terpercaya</h4>
+                        <p>Lingkungan forum yang aman, termoderasi, dan dapat dipercaya</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="val-icon" style="background:#e0f2fe;">
+                            <span class="material-symbols-outlined" style="color:#0284c7;font-variation-settings:'FILL' 1;">emoji_events</span>
+                        </div>
+                        <h4>Berprestasi</h4>
+                        <p>Menginspirasi mahasiswa untuk terus belajar dan meraih prestasi</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tim Pengelola -->
+            <div class="about-section">
+                <h2>
+                    <span class="material-symbols-outlined" style="color:#059669;font-variation-settings:'FILL' 1;">groups</span>
+                    Tim Pengelola
+                </h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#002045,#1a365d);">R</div>
+                        <h4>Rizky Aditya</h4>
+                        <div class="team-role">Platform Manager</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">S</div>
+                        <h4>Sari Wulandari</h4>
+                        <div class="team-role">Community Lead</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#059669,#047857);">B</div>
+                        <h4>Budi Santoso</h4>
+                        <div class="team-role">Head Moderator</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#0891b2,#0e7490);">D</div>
+                        <h4>Dewi Rahayu</h4>
+                        <div class="team-role">Tech Lead</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#d97706,#b45309);">A</div>
+                        <h4>Ahmad Fauzi</h4>
+                        <div class="team-role">Content Strategist</div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar" style="background:linear-gradient(135deg,#dc2626,#b91c1c);">N</div>
+                        <h4>Nurul Hidayah</h4>
+                        <div class="team-role">UI/UX Designer</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="about-cta">
+                <h2>Bergabung & Berkontribusi</h2>
+                <p>Jadilah bagian dari komunitas mahasiswa UT yang terus berkembang. Bagikan pengalaman, bantu sesama, dan raih prestasi bersama!</p>
+                <div class="cta-btn-group">
+                    <a href="create.html" class="cta-btn cta-btn-primary">
+                        <span class="material-symbols-outlined" style="font-size:18px;">edit</span>
+                        Buat Thread Pertama
+                    </a>
+                    <a href="rules.html" class="cta-btn cta-btn-secondary">
+                        <span class="material-symbols-outlined" style="font-size:18px;">gavel</span>
+                        Baca Aturan Forum
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

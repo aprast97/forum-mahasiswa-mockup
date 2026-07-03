@@ -86,12 +86,7 @@
                                     <span class="material-symbols-outlined" id="icon-preview" style="font-size:22px;color:var(--color-primary);">category</span>
                                 </div>
                             </div>
-                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                                <span style="font-size:11px;color:var(--color-on-surface-variant);">Saran:</span>
-                                ${["school","assignment","groups","work","description","campaign","storefront","chat","star","local_library","sports_esports","art_track","science","calculate","code","music_note"].map(ic =>
-                                    `<button onclick="document.getElementById('new-cat-icon').value='${ic}';previewIcon();" style="background:none;border:none;cursor:pointer;padding:2px;" title="${ic}"><span class="material-symbols-outlined" style="font-size:18px;color:var(--color-on-surface-variant);">${ic}</span></button>`
-                                ).join("")}
-                            </div>
+                            <div id="icon-suggestions" style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;"></div>
                         </div>
                         <div>
                             <label class="form-label" for="new-cat-color">Warna</label>
@@ -99,11 +94,7 @@
                                 <input id="new-cat-color" type="color" value="#002045" style="width:40px;height:36px;border-radius:6px;border:1px solid var(--color-outline-variant);cursor:pointer;padding:2px;"/>
                                 <span style="font-size:13px;color:var(--color-on-surface-variant);">Pilih warna kategori</span>
                             </div>
-                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                                ${["#002045","#7c3aed","#059669","#0891b2","#dc2626","#d97706","#6b7280","#db2777"].map(c =>
-                                    `<button onclick="document.getElementById('new-cat-color').value='${c}';" style="width:24px;height:24px;border-radius:50%;background:${c};border:2px solid transparent;cursor:pointer;" title="${c}"></button>`
-                                ).join("")}
-                            </div>
+                            <div id="color-swatches" style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;"></div>
                         </div>
                         <button onclick="addCategory()" style="padding:10px;background:#059669;color:#fff;border:none;border-radius:var(--radius-md);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
                             <span class="material-symbols-outlined" style="font-size:16px;">add</span>Tambah Kategori
