@@ -167,7 +167,7 @@ function initIconPicker() {
 
 // ── Color Swatches ────────────────────────────────────────────
 function initColorPicker() {
-    const colors = ["#002045","#7c3aed","#059669","#0891b2","#dc2626","#d97706","#6b7280","#db2777"];
+    const colors = ["#003380","#7c3aed","#059669","#0891b2","#dc2626","#d97706","#6b7280","#db2777"];
     const container = document.getElementById("color-swatches");
     if (!container) return;
     colors.forEach(function(c) {

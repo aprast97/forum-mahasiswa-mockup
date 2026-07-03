@@ -113,7 +113,7 @@ const CATEGORIES_KEY   = "scholarforum_categories";
 const NOTIFICATIONS_KEY = "scholarforum_notifications";
 
 const defaultCategories = [
-    { id: "cat_1", name: "Akademik",          icon: "school",       color: "#002045", order: 1 },
+    { id: "cat_1", name: "Akademik",          icon: "school",       color: "#003380", order: 1 },
     { id: "cat_2", name: "Tugas",              icon: "assignment",   color: "#7c3aed", order: 2 },
     { id: "cat_3", name: "Organisasi",         icon: "groups",       color: "#059669", order: 3 },
     { id: "cat_4", name: "Magang",             icon: "work",         color: "#0891b2", order: 4 },

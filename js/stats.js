@@ -30,7 +30,7 @@ function renderAllStats() {
     const roleData = [
         { label: "Mahasiswa",   count: users.filter(u => u.role === "user").length,       color: "#059669" },
         { label: "Moderator",   count: users.filter(u => u.role === "moderator").length,  color: "#7c3aed" },
-        { label: "Super Admin", count: users.filter(u => u.role === "superadmin").length, color: "#002045" },
+        { label: "Super Admin", count: users.filter(u => u.role === "superadmin").length, color: "#003380" },
     ];
     drawDonutChart("chart-role", roleData, "chart-role-legend");
 
@@ -50,7 +50,7 @@ function renderAllStats() {
         { label: "Aktif",        value: nonAdmin.filter(u => !u.suspended).length,  total: totalNonAdmin, color: "#059669" },
         { label: "Ditangguhkan", value: nonAdmin.filter(u => u.suspended).length,   total: totalNonAdmin, color: "#dc2626" },
         { label: "Moderator",    value: users.filter(u => u.role === "moderator").length, total: totalNonAdmin, color: "#7c3aed" },
-        { label: "Mahasiswa",    value: users.filter(u => u.role === "user").length, total: totalNonAdmin, color: "#002045" },
+        { label: "Mahasiswa",    value: users.filter(u => u.role === "user").length, total: totalNonAdmin, color: "#003380" },
     ]);
 
     // 5. Kategori thread bars
@@ -61,7 +61,7 @@ function renderAllStats() {
     });
     const catSorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
     const maxCat = catSorted[0] ? catSorted[0][1] : 1;
-    const catColors = ["#f59e0b", "#7c3aed", "#059669", "#002045", "#dc2626", "#0891b2"];
+    const catColors = ["#f59e0b", "#7c3aed", "#059669", "#003380", "#dc2626", "#0891b2"];
     renderProgressBars("category-bars", catSorted.map((c, i) => ({
         label: c[0], value: c[1], total: maxCat, color: catColors[i % catColors.length]
     })));
@@ -121,7 +121,7 @@ function renderTopThreads(threads) {
                     </div>
                 </div>
                 <div class="top-thread-likes">
-                    <span class="material-symbols-outlined" style="font-size:16px; font-variation-settings:'FILL' 1; color:#002045;">thumb_up</span>
+                    <span class="material-symbols-outlined" style="font-size:16px; font-variation-settings:'FILL' 1; color:#003380;">thumb_up</span>
                     ${t.likes || 0}
                 </div>
             </div>
@@ -172,7 +172,7 @@ function renderReportsTable(reports) {
                         <td style="font-weight:600; max-width:220px;">${escStat(r.threadTitle || r.threadId)}</td>
                         <td>
                             <span style="display:inline-flex; align-items:center; gap:6px;">
-                                <span style="width:26px; height:26px; border-radius:50%; background:#002045; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">
+                                <span style="width:26px; height:26px; border-radius:50%; background:#003380; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0;">
                                     ${(r.reportedBy || "?").charAt(0).toUpperCase()}
                                 </span>
                                 ${escStat(r.reportedBy)}
@@ -339,7 +339,7 @@ function drawBarChartCanvas(canvasId, entries, barColor) {
         }
 
         // Value
-        ctx.fillStyle = "#002045";
+        ctx.fillStyle = "#003380";
         ctx.font = "bold 12px Inter, sans-serif";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";

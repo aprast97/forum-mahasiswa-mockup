@@ -217,20 +217,13 @@ document.addEventListener("DOMContentLoaded", function () {
             toggleBtn.className = "theme-toggle-switch";
             toggleBtn.setAttribute("aria-label", "Ubah Tema");
             toggleBtn.innerHTML = `
-                <span class="theme-toggle-track-bg">
-                    <span class="material-symbols-outlined bg-cloud">cloud</span>
-                    <span class="bg-stars">
-                        <span class="bg-star">✦</span>
-                        <span class="bg-star-small">✦</span>
-                    </span>
-                </span>
-                <span class="theme-toggle-thumb">
-                    <span class="material-symbols-outlined theme-toggle-icon">light_mode</span>
-                </span>
+                <span class="material-symbols-outlined mode-icon sun-icon">wb_sunny</span>
+                <span class="material-symbols-outlined mode-icon moon-icon">nights_stay</span>
+                <span class="theme-toggle-thumb"></span>
             `;
         }
 
-        // Place toggleBtn: in sidebar if rankWidget exists, otherwise fallback to headerActions
+        // Place toggleBtn: in sidebar if rankWidget exists, otherwise do not display
         if (rankWidget) {
             let sidebarToggleContainer = document.getElementById("sidebar-theme-toggle-container");
             if (!sidebarToggleContainer) {
@@ -243,9 +236,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 rankWidget.parentNode.insertBefore(sidebarToggleContainer, rankWidget.nextSibling);
             }
             sidebarToggleContainer.appendChild(toggleBtn);
-        } else {
-            // Fallback for pages without sidebar (like create.html)
-            headerActions.insertBefore(toggleBtn, headerActions.firstChild);
         }
 
         // 2. Create Mobile Search Icon (Mirror) next to "Buat Utas"
@@ -273,16 +263,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Function to update the button icon and state
         const updateThemeToggleUI = () => {
             const isDark = document.documentElement.classList.contains("dark-theme");
-            const iconSpan = toggleBtn.querySelector(".theme-toggle-icon");
             const labelSpan = rankWidget ? document.querySelector("#sidebar-theme-toggle-container .toggle-label") : null;
-            if (iconSpan) {
-                if (isDark) {
-                    iconSpan.textContent = "dark_mode";
-                    if (labelSpan) labelSpan.textContent = "Mode Gelap";
-                } else {
-                    iconSpan.textContent = "light_mode";
-                    if (labelSpan) labelSpan.textContent = "Mode Terang";
-                }
+            if (labelSpan) {
+                labelSpan.textContent = isDark ? "Mode Gelap" : "Mode Terang";
             }
         };
 

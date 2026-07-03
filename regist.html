@@ -32,7 +32,7 @@
         <main class="auth-card" style="align-items: stretch;">
             <div class="auth-header">
                 <h1 class="auth-title">Registrasi</h1>
-                <p class="auth-subtitle">Bergabunglah dengan komunitas akademis modern.</p>
+                <p class="auth-subtitle">Bergabunglah dengan komunitas mahasiswa Universitas Terbuka.</p>
             </div>
 
             <form class="form-layout">
@@ -78,52 +78,138 @@
                 <div class="form-group" style="position: relative; z-index: 20;">
                     <label class="form-label" for="upbjj">UPBJJ / UT Daerah</label>
                     <div class="custom-select-wrapper" id="custom-upbjj-select">
-                        <div class="custom-select-trigger" style="position: relative; display: flex; align-items: center; justify-content: space-between; width: 100%; background-color: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: border-color 0.2s ease;">
-                            <span class="selected-value" style="color: var(--color-outline);">Pilih UT Daerah Anda</span>
-                            <span class="material-symbols-outlined" style="color: var(--color-on-surface-variant); font-size: 20px; flex-shrink: 0;">expand_more</span>
+                        <div class="custom-select-trigger"
+                            style="position: relative; display: flex; align-items: center; justify-content: space-between; width: 100%; background-color: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); border-radius: var(--radius-md); padding: 12px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: border-color 0.2s ease;">
+                            <span class="selected-value" style="color: var(--color-outline);">Pilih UT Daerah
+                                Anda</span>
+                            <span class="material-symbols-outlined"
+                                style="color: var(--color-on-surface-variant); font-size: 20px; flex-shrink: 0;">expand_more</span>
                         </div>
-                        <div class="custom-select-options" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 200px; overflow-y: auto; z-index: 100; margin-top: 4px;">
-                            <div class="custom-option disabled" data-value="" style="padding: 10px 16px; font-size: 14px; color: var(--color-outline); cursor: pointer; transition: background-color 0.2s; background-color: var(--color-surface-container-low); pointer-events: none;">Pilih UT Daerah Anda</div>
-                            <div class="custom-option" data-value="UT Banda Aceh" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Banda Aceh</div>
-                            <div class="custom-option" data-value="UT Medan" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Medan</div>
-                            <div class="custom-option" data-value="UT Batam" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Batam</div>
-                            <div class="custom-option" data-value="UT Padang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Padang</div>
-                            <div class="custom-option" data-value="UT Pangkalpinang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Pangkalpinang</div>
-                            <div class="custom-option" data-value="UT Pekanbaru" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Pekanbaru</div>
-                            <div class="custom-option" data-value="UT Jambi" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Jambi</div>
-                            <div class="custom-option" data-value="UT Palembang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Palembang</div>
-                            <div class="custom-option" data-value="UT Bengkulu" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Bengkulu</div>
-                            <div class="custom-option" data-value="UT Bandar Lampung" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Bandar Lampung</div>
-                            <div class="custom-option" data-value="UT Jakarta" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Jakarta</div>
-                            <div class="custom-option" data-value="UT Serang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Serang</div>
-                            <div class="custom-option" data-value="UT Bogor" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Bogor</div>
-                            <div class="custom-option" data-value="UT Bandung" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Bandung</div>
-                            <div class="custom-option" data-value="UT Purwokerto" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Purwokerto</div>
-                            <div class="custom-option" data-value="UT Semarang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Semarang</div>
-                            <div class="custom-option" data-value="UT Surakarta" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Surakarta</div>
-                            <div class="custom-option" data-value="UT Yogyakarta" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Yogyakarta</div>
-                            <div class="custom-option" data-value="UT Surabaya" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Surabaya</div>
-                            <div class="custom-option" data-value="UT Malang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Malang</div>
-                            <div class="custom-option" data-value="UT Jember" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Jember</div>
-                            <div class="custom-option" data-value="UT Denpasar" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Denpasar</div>
-                            <div class="custom-option" data-value="UT Mataram" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Mataram</div>
-                            <div class="custom-option" data-value="UT Kupang" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Kupang</div>
-                            <div class="custom-option" data-value="UT Pontianak" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Pontianak</div>
-                            <div class="custom-option" data-value="UT Palangka Raya" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Palangka Raya</div>
-                            <div class="custom-option" data-value="UT Banjarmasin" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Banjarmasin</div>
-                            <div class="custom-option" data-value="UT Samarinda" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Samarinda</div>
-                            <div class="custom-option" data-value="UT Makassar" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Makassar</div>
-                            <div class="custom-option" data-value="UT Majene" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Majene</div>
-                            <div class="custom-option" data-value="UT Palu" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Palu</div>
-                            <div class="custom-option" data-value="UT Kendari" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Kendari</div>
-                            <div class="custom-option" data-value="UT Manado" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Manado</div>
-                            <div class="custom-option" data-value="UT Gorontalo" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Gorontalo</div>
-                            <div class="custom-option" data-value="UT Ambon" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Ambon</div>
-                            <div class="custom-option" data-value="UT Ternate" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Ternate</div>
-                            <div class="custom-option" data-value="UT Jayapura" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Jayapura</div>
-                            <div class="custom-option" data-value="UT Sorong" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Sorong</div>
-                            <div class="custom-option" data-value="UT Tarakan" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Tarakan</div>
-                            <div class="custom-option" data-value="UT Luar Negeri" style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">UT Luar Negeri</div>
+                        <div class="custom-select-options"
+                            style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background-color: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); max-height: 200px; overflow-y: auto; z-index: 100; margin-top: 4px;">
+                            <div class="custom-option disabled" data-value=""
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-outline); cursor: pointer; transition: background-color 0.2s; background-color: var(--color-surface-container-low); pointer-events: none;">
+                                Pilih UT Daerah Anda</div>
+                            <div class="custom-option" data-value="UT Banda Aceh"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Banda Aceh</div>
+                            <div class="custom-option" data-value="UT Medan"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Medan</div>
+                            <div class="custom-option" data-value="UT Batam"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Batam</div>
+                            <div class="custom-option" data-value="UT Padang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Padang</div>
+                            <div class="custom-option" data-value="UT Pangkalpinang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Pangkalpinang</div>
+                            <div class="custom-option" data-value="UT Pekanbaru"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Pekanbaru</div>
+                            <div class="custom-option" data-value="UT Jambi"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Jambi</div>
+                            <div class="custom-option" data-value="UT Palembang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Palembang</div>
+                            <div class="custom-option" data-value="UT Bengkulu"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Bengkulu</div>
+                            <div class="custom-option" data-value="UT Bandar Lampung"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Bandar Lampung</div>
+                            <div class="custom-option" data-value="UT Jakarta"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Jakarta</div>
+                            <div class="custom-option" data-value="UT Serang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Serang</div>
+                            <div class="custom-option" data-value="UT Bogor"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Bogor</div>
+                            <div class="custom-option" data-value="UT Bandung"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Bandung</div>
+                            <div class="custom-option" data-value="UT Purwokerto"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Purwokerto</div>
+                            <div class="custom-option" data-value="UT Semarang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Semarang</div>
+                            <div class="custom-option" data-value="UT Surakarta"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Surakarta</div>
+                            <div class="custom-option" data-value="UT Yogyakarta"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Yogyakarta</div>
+                            <div class="custom-option" data-value="UT Surabaya"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Surabaya</div>
+                            <div class="custom-option" data-value="UT Malang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Malang</div>
+                            <div class="custom-option" data-value="UT Jember"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Jember</div>
+                            <div class="custom-option" data-value="UT Denpasar"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Denpasar</div>
+                            <div class="custom-option" data-value="UT Mataram"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Mataram</div>
+                            <div class="custom-option" data-value="UT Kupang"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Kupang</div>
+                            <div class="custom-option" data-value="UT Pontianak"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Pontianak</div>
+                            <div class="custom-option" data-value="UT Palangka Raya"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Palangka Raya</div>
+                            <div class="custom-option" data-value="UT Banjarmasin"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Banjarmasin</div>
+                            <div class="custom-option" data-value="UT Samarinda"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Samarinda</div>
+                            <div class="custom-option" data-value="UT Makassar"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Makassar</div>
+                            <div class="custom-option" data-value="UT Majene"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Majene</div>
+                            <div class="custom-option" data-value="UT Palu"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Palu</div>
+                            <div class="custom-option" data-value="UT Kendari"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Kendari</div>
+                            <div class="custom-option" data-value="UT Manado"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Manado</div>
+                            <div class="custom-option" data-value="UT Gorontalo"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Gorontalo</div>
+                            <div class="custom-option" data-value="UT Ambon"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Ambon</div>
+                            <div class="custom-option" data-value="UT Ternate"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Ternate</div>
+                            <div class="custom-option" data-value="UT Jayapura"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Jayapura</div>
+                            <div class="custom-option" data-value="UT Sorong"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Sorong</div>
+                            <div class="custom-option" data-value="UT Tarakan"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Tarakan</div>
+                            <div class="custom-option" data-value="UT Luar Negeri"
+                                style="padding: 10px 16px; font-size: 14px; color: var(--color-on-surface); cursor: pointer; transition: background-color 0.2s;">
+                                UT Luar Negeri</div>
                         </div>
                         <input type="hidden" id="upbjj" name="upbjj" required="" />
                     </div>

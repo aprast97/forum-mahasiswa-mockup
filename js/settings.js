@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const upbjjSelect = document.getElementById("settings-upbjj");
     const programInput = document.getElementById("settings-program");
     const phoneInput = document.getElementById("settings-phone");
+    const aboutInput = document.getElementById("settings-about");
     const avatarPreview = document.getElementById("settings-avatar-preview");
     const avatarInput = document.getElementById("settings-avatar-input");
     const btnUploadAvatar = document.getElementById("btn-settings-upload-avatar");
@@ -50,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (nameInput) nameInput.value = userDetail.namaLengkap || "";
     if (programInput) programInput.value = userDetail.programStudi || "";
     if (phoneInput) phoneInput.value = userDetail.noTelepon || "";
+    if (aboutInput) aboutInput.value = userDetail.tentangSaya || "";
     
     const defaultAvatar = "https://lh3.googleusercontent.com/aida-public/AB6AXuCHIDcAqOwTfUbQIFmRTYv43WaqQI2Txa5V5zqahTfLzAiQx69JH3uYp-y8A9MkRobEyg-0w5OZDE3kYNEBn1GkCK01NhzwyjCA_MTQl666zrMzPpUQa1DnaLdM20qdv5upfcF0Kwm5A_bV4SEJVu9-6ZLXgz2AiwpLlY9ZJ1cPDi2xsRRFzgsfkGycdjso_tHG7HUBYZSoQ9Xg8m8qDAdAfzSUL9BJ_ITPfXhKKezcKU7o0NJLp0ls6Udm5Jjqpo9bI9zmsV4dqSP-";
     
@@ -112,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const newUpbjj = upbjjSelect.value;
             const newProgram = programInput.value.trim();
             const newPhone = phoneInput.value.trim();
+            const newAbout = aboutInput ? aboutInput.value.trim() : "";
             const newPassword = passwordInput.value;
             const newPasswordConfirm = passwordConfirmInput.value;
 
@@ -140,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 dbUser.upbjj = newUpbjj;
                 dbUser.programStudi = newProgram;
                 dbUser.noTelepon = newPhone;
+                dbUser.tentangSaya = newAbout;
                 dbUser.avatarUrl = updatedAvatarBase64;
                 if (newPassword) {
                     dbUser.password = newPassword;
@@ -152,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             currentUser.upbjj = newUpbjj;
             currentUser.programStudi = newProgram;
             currentUser.noTelepon = newPhone;
+            currentUser.tentangSaya = newAbout;
             currentUser.avatarUrl = updatedAvatarBase64;
             localStorage.setItem("scholarforum_session", JSON.stringify(currentUser));
 

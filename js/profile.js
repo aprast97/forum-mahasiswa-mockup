@@ -121,14 +121,10 @@ function renderProfileHeaderCard() {
     setElVal("meta-val-program", profileUser.programStudi || "—");
     setElVal("meta-val-upbjj", profileUser.upbjj || "Lainnya");
     
-    const phoneRow = document.getElementById("meta-row-phone");
-    if (phoneRow) {
-        if (profileUser.noTelepon) {
-            phoneRow.style.display = "flex";
-            setElVal("meta-val-phone", profileUser.noTelepon);
-        } else {
-            phoneRow.style.display = "none";
-        }
+    const aboutRow = document.getElementById("meta-row-about");
+    if (aboutRow) {
+        const aboutText = profileUser.tentangSaya || "Halo! Saya adalah mahasiswa Universitas Terbuka yang aktif berdiskusi di forum ini.";
+        setElVal("meta-val-about", aboutText);
     }
     
     // Calculate Stats
@@ -153,10 +149,6 @@ function renderProfileHeaderCard() {
     if (actionContainer) {
         if (isOwner) {
             actionContainer.innerHTML = `
-                <a class="btn btn-secondary" href="settings.html" style="background-color: var(--color-surface-variant); color: var(--color-on-surface-variant); box-shadow: none; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                    <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 6px;">settings</span>
-                    Pengaturan
-                </a>
                 <a class="btn btn-primary" href="settings.html" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">
                     <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 6px;">edit</span>
                     Edit Profil

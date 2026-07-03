@@ -6,14 +6,14 @@
     --font-family: 'Inter', system-ui, -apple-system, sans-serif;
     
     /* Warna Utama & Latar Belakang (Palette) */
-    --color-primary: #002045;
+    --color-primary: #003380;
     --color-on-primary: #ffffff;
-    --color-primary-container: #1a365d;
-    --color-on-primary-container: #86a0cd;
+    --color-primary-container: #e6f0ff;
+    --color-on-primary-container: #003380;
     --color-primary-fixed-dim: #adc7f7;
     
-    --color-secondary-container: #fed01b;
-    --color-on-secondary-container: #6f5900;
+    --color-secondary-container: #003380;
+    --color-on-secondary-container: #ffffff;
     --color-secondary-fixed: #ffe083;
     --color-secondary-fixed-dim: #eec200;
     
@@ -339,7 +339,7 @@ aside.sidebar {
 }
 
 .rank-widget-value .material-symbols-outlined {
-    color: var(--color-secondary-container);
+    color: #eab308; /* Keep gold medal color */
 }
 
 .progress-bar-bg {
@@ -2496,6 +2496,10 @@ aside.sidebar.collapsed {
         font-size: 20px !important;
     }
 
+    .notification-btn {
+        padding: 4px !important;
+    }
+
     .avatar-container img {
         width: 28px !important;
         height: 28px !important;
@@ -2819,101 +2823,54 @@ aside.sidebar.collapsed {
 
 /* 28. DYNAMIC LIGHT/DARK MODE TOGGLE & DARK THEME OVERRIDES */
 .theme-toggle-switch {
-    width: 68px; /* Slightly wider to accommodate track decorations */
-    height: 32px;
-    background: linear-gradient(to right, #0ea5e9, #38bdf8); /* Bright sky in light mode */
+    width: 56px;
+    height: 28px;
+    background-color: #f1f5f9; /* Light mode track background */
     border: none;
     border-radius: var(--radius-full);
     position: relative;
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 0 4px;
-    transition: background 0.4s ease, box-shadow 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+    padding: 0 6px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     margin-right: 16px;
     flex-shrink: 0;
-    overflow: hidden;
     outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .theme-toggle-switch:hover {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(14, 165, 233, 0.2);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 3px var(--color-primary-container);
 }
 
-.theme-toggle-track-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.mode-icon {
+    font-size: 14px !important;
+    z-index: 2;
+    transition: color 0.3s ease;
     pointer-events: none;
 }
 
-/* Cloud icon in light mode positioned on the right */
-.theme-toggle-track-bg .bg-cloud {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px !important;
-    color: rgba(255, 255, 255, 0.85);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    font-variation-settings: 'FILL' 1, 'wght' 400 !important;
+.sun-icon {
+    color: #0f172a; /* Charcoal (active on light theme thumb) */
 }
 
-/* Star sparkles in dark mode positioned on the left */
-.theme-toggle-track-bg .bg-stars {
-    position: absolute;
-    left: 8px;
-    top: 0;
-    width: 24px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.bg-stars .bg-star {
-    font-size: 10px;
-    color: #ffffff;
-    text-shadow: 0 0 2px #fff;
-    animation: pulseStar 2s infinite ease-in-out;
-}
-
-.bg-stars .bg-star-small {
-    font-size: 7px;
-    color: #cbd5e1;
-    text-shadow: 0 0 1px #fff;
-    animation: pulseStar 2.5s infinite ease-in-out;
-    margin-top: 6px;
-}
-
-@keyframes pulseStar {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
+.moon-icon {
+    color: #94a3b8; /* Muted slate (inactive on light theme) */
 }
 
 .theme-toggle-thumb {
-    width: 24px;
-    height: 24px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    background-color: #ffffff; /* White knob */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    z-index: 2; /* Keep knob above background decorations */
-}
-
-.theme-toggle-icon {
-    font-size: 16px !important;
-    font-variation-settings: 'FILL' 1, 'wght' 700 !important;
-    color: #f59e0b; /* Yellow sun icon in light mode */
-    transition: color 0.3s ease;
+    background-color: #e2e8f0; /* Light mode active thumb */
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 /* Dark mode theme variable override rules (applied to html.dark-theme) */
@@ -2954,30 +2911,24 @@ html.dark-theme, html.dark-theme body {
 
 /* Adjustments for specific elements in Dark Mode to ensure look & feel is premium */
 html.dark-theme .theme-toggle-switch {
-    background: linear-gradient(to right, #0b1329, #1e293b); /* Night sky track in dark mode */
+    background-color: #090d16; /* Black/dark navy track background */
 }
 
 html.dark-theme .theme-toggle-switch:hover {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 html.dark-theme .theme-toggle-thumb {
-    transform: translateX(36px); /* Slide to the right */
-    background-color: #1e293b; /* Dark knob in dark mode */
+    transform: translateX(28px); /* 56 - 22 - 6 = 28px */
+    background-color: #20293a; /* Dark mode active thumb */
 }
 
-html.dark-theme .theme-toggle-icon {
-    color: #ffffff; /* White moon icon in dark mode */
+html.dark-theme .sun-icon {
+    color: #475569; /* Muted slate (inactive on dark theme) */
 }
 
-/* Fade clouds out and stars in during dark mode */
-html.dark-theme .bg-cloud {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.5);
-}
-
-html.dark-theme .bg-stars {
-    opacity: 1;
+html.dark-theme .moon-icon {
+    color: #ffffff; /* White (active on dark theme thumb) */
 }
 
 /* Sidebar and Header customization in dark theme to look cohesive */
