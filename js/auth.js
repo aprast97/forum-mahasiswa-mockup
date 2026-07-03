@@ -131,7 +131,13 @@ document.addEventListener("DOMContentLoaded", function () {
             e.stopPropagation();
             if (window.innerWidth <= 768) {
                 sidebar.classList.toggle("show-mobile");
-                document.body.classList.toggle("sidebar-open");
+                const isOpen = document.body.classList.toggle("sidebar-open");
+                
+                // Toggle hamburger icon
+                const iconSpan = hamburgerBtn.querySelector(".material-symbols-outlined");
+                if (iconSpan) {
+                    iconSpan.textContent = isOpen ? "close" : "menu";
+                }
             } else {
                 sidebar.classList.toggle("collapsed");
             }
@@ -142,6 +148,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
                 sidebar.classList.remove("show-mobile");
                 document.body.classList.remove("sidebar-open");
+                
+                // Reset hamburger icon
+                const iconSpan = hamburgerBtn.querySelector(".material-symbols-outlined");
+                if (iconSpan) {
+                    iconSpan.textContent = "menu";
+                }
             }
         });
     }

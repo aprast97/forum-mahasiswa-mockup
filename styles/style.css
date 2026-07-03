@@ -1767,13 +1767,9 @@ aside.sidebar.collapsed {
 }
 
 @media (max-width: 768px) {
-    /* Transition settings for components pushed to the right, excluding hamburger button */
-    .brand-logo,
-    .header-actions,
-    .main-feed,
-    .settings-card,
-    .create-thread-card,
-    .create-thread-container,
+    /* Transition settings for components pushed to the right on mobile */
+    header.app-header,
+    main.main-feed,
     aside.sidebar {
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -1782,28 +1778,28 @@ aside.sidebar.collapsed {
         display: flex !important;
         position: fixed;
         top: 70px;
-        left: -256px; /* Initially off-screen */
-        width: 256px;
+        left: -200px; /* Initially off-screen */
+        width: 200px;
         height: calc(100vh - 70px);
         z-index: 99;
         box-shadow: none;
     }
     
-    body.sidebar-open .brand-logo,
-    body.sidebar-open .header-actions,
-    body.sidebar-open .main-feed,
-    body.sidebar-open .settings-card,
-    body.sidebar-open .create-thread-card,
-    body.sidebar-open .create-thread-container {
-        transform: translateX(256px);
+    body.sidebar-open main.main-feed {
+        transform: translateX(200px);
     }
     
     body.sidebar-open aside.sidebar {
-        transform: translateX(256px);
+        transform: translateX(200px);
         box-shadow: var(--shadow-lg);
     }
+
+    body.sidebar-open .hamburger-menu-btn {
+        background-color: var(--color-primary-container);
+        color: var(--color-primary);
+    }
     
-    /* Ensure hamburger button stays fixed in place */
+    /* Keep hamburger menu button clean in the header flow */
     .hamburger-menu-btn {
         z-index: 100;
         position: relative;
